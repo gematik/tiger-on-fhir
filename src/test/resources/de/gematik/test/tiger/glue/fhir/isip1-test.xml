@@ -1,0 +1,49 @@
+<Organization xmlns="http://hl7.org/fhir">
+   <id value="ExampleIsipOrganization"/>
+   <meta>
+      <profile value="https://gematik.de/fhir/isip/v1/Basismodul/StructureDefinition/IsipOrganization|1.0.1"/>
+   </meta>
+   <identifier>
+      <system value="https://gematik.de/fhir/sid/telematik-id"/>
+      <value value="1234567890"/>
+   </identifier>
+   <active value="true"/>
+   <type>
+      <coding>
+         <system value="http://snomed.info/sct"/>
+         <code value="42665001"/>
+         <display value="Nursing home (environment)"/>
+      </coding>
+   </type>
+   <name value="Haus am See"/>
+   <address>
+      <type value="both"/>
+      <line value="Musterweg 2">
+         <extension url="http://hl7.org/fhir/StructureDefinition/iso21090-ADXP-streetName">
+            <valueString value="Musterweg"/>
+         </extension>
+         <extension url="http://hl7.org/fhir/StructureDefinition/iso21090-ADXP-houseNumber">
+            <valueString value="2"/>
+         </extension>
+      </line>
+      <line value="3. Etage">
+         <extension url="http://hl7.org/fhir/StructureDefinition/iso21090-ADXP-additionalLocator">
+            <valueString value="3. Etage"/>
+         </extension>
+      </line>
+      <city value="Musterhausen"/>
+      <postalCode value="98764"/>
+      <country value="DE"/>
+   </address>
+   <address>
+      <type value="postal"/>
+      <line value="Postfach 8 15">
+         <extension url="http://hl7.org/fhir/StructureDefinition/iso21090-ADXP-postBox">
+            <valueString value="Postfach 8 15"/>
+         </extension>
+      </line>
+      <city value="Musterhausen"/>
+      <postalCode value="98764"/>
+      <country value="DE"/>
+   </address>
+</Organization>
