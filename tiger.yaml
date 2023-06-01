@@ -1,0 +1,15 @@
+localProxyActive: true
+servers: {
+}
+
+tigerProxy:
+  adminPort: 12345
+  fileSaveInfo:
+    sourceFile: "./src/test/resources/fhir.tgr"
+my:
+  configurable:
+    author:
+      type:
+        valid: "Device"
+        invalid: "Dinosaur"
+    fhirpathExpression: "Bundle.entry.resource.author.type.where(value = \"Device\").exists()"
