@@ -16,21 +16,26 @@ limitations under the License.
 
 package de.gematik.test.tiger.fhir.validation.staticv;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import ca.uhn.fhir.validation.SingleValidationMessage;
+import de.gematik.rbellogger.data.RbelElement;
 import de.gematik.refv.SupportedValidationModule;
 import de.gematik.refv.ValidationModuleFactory;
 import de.gematik.refv.commons.validation.ValidationModule;
+import de.gematik.refv.commons.validation.ValidationOptions;
 import de.gematik.refv.commons.validation.ValidationResult;
 import de.gematik.test.tiger.lib.rbel.RbelMessageValidator;
 import io.cucumber.core.plugin.report.Evidence;
 import io.cucumber.core.plugin.report.Evidence.Type;
 import io.cucumber.core.plugin.report.EvidenceRecorder;
 import io.cucumber.core.plugin.report.EvidenceRecorderFactory;
-import java.util.EnumMap;
-import java.util.Map;
 import lombok.SneakyThrows;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Glue code for Static-FHIR validation.
@@ -39,97 +44,115 @@ import org.jetbrains.annotations.NotNull;
  */
 public class StaticFhirValidation {
 
+    private static final String BODY_RBEL_PATH = "$.body";
     private final Map<SupportedValidationModule, ValidationModule> validationModuleCache =
-        new EnumMap<>(SupportedValidationModule.class);
+            new EnumMap<>(SupportedValidationModule.class);
 
     private static final RbelMessageValidator rbelValidator = RbelMessageValidator.instance;
 
     private final EvidenceRecorder evidenceRecorder = EvidenceRecorderFactory.getEvidenceRecorder();
 
     public void tgrCurrentRequestBodyAtIsValidFHIRRessourceOfType(
-        final SupportedValidationModule validationType) {
-        tgrCurrentRequestAtIsValidFHIRRessourceOfType("$.body", validationType);
+            final SupportedValidationModule validationType) {
+        tgrCurrentRequestAtIsValidFHIRRessourceOfType(BODY_RBEL_PATH, validationType);
     }
 
+    public void tgrCurrentRequestBodyAtIsValidFHIRRessourceOfType(SupportedValidationModule validationType, String profileUrl) {
+        tgrCurrentRequestAtIsValidFHIRRessourceOfType(BODY_RBEL_PATH, validationType, createValidationOptionsWithProfile(profileUrl));
+    }
 
     public void tgrCurrentRequestAtIsValidFHIRRessourceOfType(final String rbelPath,
-        final SupportedValidationModule validationType) {
-        final var rbelResponseBody = rbelValidator.findElementInCurrentRequest(rbelPath);
-        final var responseBody = rbelResponseBody.getRawStringContent();
+                                                              final SupportedValidationModule validationType) {
+        tgrCurrentRequestAtIsValidFHIRRessourceOfType(rbelPath, validationType, ValidationOptions.getDefaults());
+    }
 
-        final var validator = getValidationModuleFor(validationType);
-        final var validationResult = validator.validateString(responseBody);
+    public void tgrCurrentRequestAtIsValidFHIRRessourceOfType(String rbelPath, SupportedValidationModule validationType, String profileUrl) {
+        tgrCurrentRequestAtIsValidFHIRRessourceOfType(rbelPath, validationType, createValidationOptionsWithProfile(profileUrl));
+    }
 
-        recordEvidencesOf(validationResult);
+    private void tgrCurrentRequestAtIsValidFHIRRessourceOfType(String rbelPath, SupportedValidationModule validationType,
+                                                               ValidationOptions validationOptions) {
+        final var validationResult = validateRbelElementAt(rbelValidator.findElementInCurrentRequest(rbelPath), validationType, validationOptions);
 
         assertThat(validationResult.isValid())
-            .withFailMessage(
-                () -> "response body is not a valid FHIR resource of type " + validationType)
-            .isTrue();
+                .withFailMessage(
+                        () -> "request body is not a valid %s resource".formatted(validationType))
+                .isTrue();
+    }
+
+    private static ValidationOptions createValidationOptionsWithProfile(String profile) {
+        var validationOptions = ValidationOptions.getDefaults();
+        validationOptions.setProfiles(List.of(profile));
+        return validationOptions;
     }
 
     private void recordEvidencesOf(final ValidationResult validationResult) {
         validationResult.getValidationMessages().stream()
-            .map(StaticFhirValidation::toEvidence)
-            .forEach(evidenceRecorder::recordEvidence);
+                .map(StaticFhirValidation::toEvidence)
+                .forEach(evidenceRecorder::recordEvidence);
     }
 
     @NotNull
     private static Evidence toEvidence(final SingleValidationMessage it) {
-        final Type type;
-        switch (it.getSeverity()) {
-            case INFORMATION:
-                type = Type.INFO;
-                break;
-            case WARNING:
-                type = Type.WARN;
-                break;
-            case ERROR:
-                type = Type.ERROR;
-                break;
-            case FATAL:
-                type = Type.FATAL;
-                break;
-            default:
-                throw new UnsupportedOperationException(
-                    "Sorry, we forgot to implement the severity " + it.getSeverity());
-        }
+        final Type type = switch (it.getSeverity()) {
+            case INFORMATION -> Type.INFO;
+            case WARNING -> Type.WARN;
+            case ERROR -> Type.ERROR;
+            case FATAL -> Type.FATAL;
+        };
 
         return new Evidence(type, it.getMessage(), it);
     }
 
 
     public void tgrCurrentResponseBodyAtIsValidFHIRRessourceOfType(
-        final SupportedValidationModule validationType) {
-        tgrCurrentResponseAtIsValidFHIRRessourceOfType("$.body", validationType);
+            final SupportedValidationModule validationType) {
+        tgrCurrentResponseAtIsValidFHIRRessourceOfType(BODY_RBEL_PATH, validationType);
     }
-
 
     public void tgrCurrentResponseAtIsValidFHIRRessourceOfType(final String rbelPath,
-        final SupportedValidationModule validationType) {
-        final var rbelResponseBody = rbelValidator.findElementInCurrentResponse(rbelPath);
-        final var responseBody = rbelResponseBody.getRawStringContent();
+                                                               final SupportedValidationModule validationType) {
+        tgrCurrentResponseAtIsValidFHIRRessourceOfType(rbelPath, validationType, ValidationOptions.getDefaults());
+    }
 
-        final var validator = getValidationModuleFor(validationType);
-        final var validationResult = validator.validateString(responseBody);
+    public void tgrCurrentResponseBodyAtIsValidFHIRRessourceOfType(SupportedValidationModule validationType, String profileUrl) {
+        tgrCurrentResponseAtIsValidFHIRRessourceOfType(BODY_RBEL_PATH, validationType, createValidationOptionsWithProfile(profileUrl));
+    }
 
-        recordEvidencesOf(validationResult);
+    public void tgrCurrentResponseAtIsValidFHIRRessourceOfType(String rbelPath, SupportedValidationModule validationType, String profileUrl) {
+        tgrCurrentResponseAtIsValidFHIRRessourceOfType(rbelPath, validationType, createValidationOptionsWithProfile(profileUrl));
+    }
+
+    private void tgrCurrentResponseAtIsValidFHIRRessourceOfType(String rbelPath, SupportedValidationModule validationType, ValidationOptions validationOptions) {
+        final var validationResult = validateRbelElementAt(rbelValidator.findElementInCurrentResponse(rbelPath), validationType, validationOptions);
 
         assertThat(validationResult.isValid())
-            .withFailMessage(
-                () -> "response body is not a valid FHIR resource of type " + validationType)
-            .isTrue();
+                .withFailMessage(
+                        () -> "response body is not a valid %s resource".formatted(validationType))
+                .isTrue();
     }
+
+    @NotNull
+    private ValidationResult validateRbelElementAt(RbelElement toValidate, SupportedValidationModule validationType, ValidationOptions validationOptions) {
+        final var rawContentToValidate = toValidate.getRawStringContent();
+
+        final var validator = getValidationModuleFor(validationType);
+        final var validationResult = validator.validateString(rawContentToValidate, validationOptions);
+
+        recordEvidencesOf(validationResult);
+        return validationResult;
+    }
+
 
     private ValidationModule getValidationModuleFor(final SupportedValidationModule validationType) {
         return validationModuleCache.computeIfAbsent(validationType,
-            StaticFhirValidation::getNewValidationModule);
+                StaticFhirValidation::getNewValidationModule);
     }
 
     @SneakyThrows
     private static ValidationModule getNewValidationModule(
-        final SupportedValidationModule validationType) {
+            final SupportedValidationModule validationType) {
         return new ValidationModuleFactory()
-            .createValidationModule(validationType);
+                .createValidationModule(validationType);
     }
 }

@@ -8,10 +8,10 @@ This extension provides a set of simple BDD steps which can be used in combinati
 
 ```gherkin
 When TGR find request to path '/erp/42'
-When TGR current request body evaluates the FHIRPath 'Bundle.entry.resource.author.type.where(value = "Device").exists()'
-When TGR current response body evaluates the FHIRPath 'Bundle.entry.resource.author.type.where(value != "Dinosaur").exists()'
-When TGR current request body fails the FHIRPath 'Bundle.entry.resource.author.type.where(value != "Practitioner" and value != "Device").exists()'
-When TGR current request body evaluates the FHIRPaths:
+When FHIR current request body evaluates the FHIRPath 'Bundle.entry.resource.author.type.where(value = "Device").exists()'
+When FHIR current response body evaluates the FHIRPath 'Bundle.entry.resource.author.type.where(value != "Dinosaur").exists()'
+When FHIR current request body fails the FHIRPath 'Bundle.entry.resource.author.type.where(value != "Practitioner" and value != "Device").exists()'
+When FHIR current request body evaluates the FHIRPaths:
 """
   Bundle.entry.resource.author.type.where(value != "Practitioner" and value != "Device").exists().not()
   Bundle.entry.resource.author.type.where(value != "Device") != "Dinoaur"
@@ -22,9 +22,9 @@ In addition, you may also check complete messages for compliance with certain FH
 
 ```gherkin
 When TGR find request to path '/erp/42'
-Then TGR current request body is valid FHIR resource of type ERP
-Then TGR current response body is valid FHIR resource of type ERP
-And TGR current request '$.body' is valid FHIR resource of type erp
+Then FHIR current request body is valid FHIR resource of type ERP
+Then FHIR current response body is valid FHIR resource of type ERP
+And FHIR current request '$.body' is valid FHIR resource of type erp
 ```
 
 ## What is Tiger

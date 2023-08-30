@@ -1,5 +1,13 @@
 # Changelog tiger-on-fhir
 
+# Release 1.1.0
+
+## Breaking changes
+
+* TGRFHIR-9: Einführung deutscher Steps und Umbenamsung des Anfangswortes bei den Steps.
+
+Alle FHIR Steps beginnen nun mit "FHIR", die mit "TGR" beginnenden FHIR Steps sind deprecated und werden in einer zukünftigen Version entfernt.
+
 # Release 1.0.0
 
 ## Features
