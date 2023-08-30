@@ -16,19 +16,21 @@ limitations under the License.
 
 package de.gematik.test.tiger.glue.fhir;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
+import lombok.SneakyThrows;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Comparator;
 import java.util.stream.Collectors;
-import lombok.SneakyThrows;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class Helper {
 
     @SneakyThrows
-    @Given("in {string} exists a file matching {string} containing all of the following lines:")
+    @Then("in {string} exists a file matching {string} containing all of the following lines:")
     public void inExistsAFileMatchingContainingAllOfTheFollowingLines(
         final String reportDir,
         final String reportFilePattern, final String expectedLines) {
@@ -49,6 +51,31 @@ public class Helper {
                 .hasValueSatisfying(reportString ->
                     assertThat(reportString)
                         .contains(lines));
+        }
+    }
+
+    @SneakyThrows
+    @Then("in {string} exists no file matching {string} containing any of the following lines:")
+    public void inExistsNoFileMatchingContainingAnyOfTheFollowingLines(
+            final String reportDir,
+            final String reportFilePattern, final String expectedLines) {
+
+        try (final var files = Files.walk(Paths.get(reportDir))) {
+            var report = files.filter(it -> it.getFileName().toString().matches(reportFilePattern))
+                    .sorted(byModificationTime().reversed())
+                    .limit(1)
+                    .map(Helper::toFileContent)
+                    .findFirst();
+
+            final var lines = expectedLines.lines()
+                    .map(it -> (CharSequence) it)
+                    .collect(Collectors.toList());
+
+            assertThat(report)
+                    .isPresent()
+                    .hasValueSatisfying(reportString ->
+                            assertThat(reportString)
+                                    .doesNotContain(lines));
         }
     }
 

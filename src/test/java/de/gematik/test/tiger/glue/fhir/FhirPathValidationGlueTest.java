@@ -16,24 +16,11 @@ limitations under the License.
 
 package de.gematik.test.tiger.glue.fhir;
 
-import static de.gematik.test.tiger.glue.fhir.Assertions.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import de.gematik.test.tiger.fhir.validation.fhirpath.FhirPathValidation;
 import de.gematik.test.tiger.fhir.validation.fhirpath.NetTracer;
 import io.cucumber.core.plugin.report.Evidence;
 import io.cucumber.core.plugin.report.Evidence.Type;
 import io.cucumber.core.plugin.report.EvidenceRecorder;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Optional;
-import java.util.stream.Stream;
 import lombok.SneakyThrows;
 import org.hl7.fhir.r4.model.BooleanType;
 import org.hl7.fhir.r4.model.Bundle;
@@ -46,6 +33,17 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.ArgumentCaptor;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Stream;
+
+import static de.gematik.test.tiger.glue.fhir.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 /**
  * Tests for {@link FhirPathValidationGlue}.
@@ -657,7 +655,7 @@ class FhirPathValidationGlueTest {
     @SneakyThrows
     public static String readRessourceToString(String ressourceName) {
         return Files.readString(
-            Path.of(FhirPathValidationGlueTest.class.getResource(ressourceName)
+            Path.of(Objects.requireNonNull(FhirPathValidationGlueTest.class.getResource(ressourceName))
                 .toURI()));
     }
 }
