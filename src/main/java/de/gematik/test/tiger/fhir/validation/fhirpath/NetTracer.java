@@ -20,24 +20,18 @@ import de.gematik.rbellogger.data.RbelElement;
 import de.gematik.test.tiger.lib.rbel.RbelMessageValidator;
 import java.util.Optional;
 
-/**
- * Simplified access to traced requests and responses.
- */
+/** Simplified access to traced requests and responses. */
 public class NetTracer {
 
   private static final RbelMessageValidator rbelValidator = RbelMessageValidator.instance;
 
   public Optional<String> getCurrentRequestsRawStringByRbelPath(final String rbelPath) {
-    return Optional.ofNullable(rbelValidator
-            .findElementInCurrentRequest(rbelPath))
+    return Optional.ofNullable(rbelValidator.findElementInCurrentRequest(rbelPath))
         .map(RbelElement::getRawStringContent);
   }
-
 
   public Optional<String> getCurrentResponseRawStringByRbelPath(final String rbelPath) {
-    return Optional.ofNullable(rbelValidator
-            .findElementInCurrentResponse(rbelPath))
+    return Optional.ofNullable(rbelValidator.findElementInCurrentResponse(rbelPath))
         .map(RbelElement::getRawStringContent);
   }
-
 }

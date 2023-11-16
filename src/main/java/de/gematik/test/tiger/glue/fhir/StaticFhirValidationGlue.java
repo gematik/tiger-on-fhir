@@ -26,8 +26,8 @@ import lombok.RequiredArgsConstructor;
 
 /**
  * Glue code for Static-FHIR validation.
- * <p>
- * It allows you to validate FHIR resources against the FHIR specification.
+ *
+ * <p>It allows you to validate FHIR resources against the FHIR specification.
  */
 @SuppressWarnings("unused")
 @RequiredArgsConstructor
@@ -46,76 +46,110 @@ public class StaticFhirValidationGlue {
   }
 
   @Then("FHIR current request body is a valid {supportedValidationModule} resource")
-  @Then("TGR current request body is a valid {supportedValidationModule} resource")
-  @Wenn("FHIR die aktuelle Anfrage im Body eine gültige {supportedValidationModule} Ressource enthält")
-  @Dann("FHIR prüfe die aktuelle Anfrage enthält im Body eine gültige {supportedValidationModule} Ressource")
+  @Wenn(
+      "FHIR die aktuelle Anfrage im Body eine gültige {supportedValidationModule} Ressource"
+          + " enthält")
+  @Dann(
+      "FHIR prüfe die aktuelle Anfrage enthält im Body eine gültige {supportedValidationModule}"
+          + " Ressource")
   public void tgrCurrentRequestBodyAtIsValidFHIRRessourceOfType(
-          final SupportedValidationModule validationType) {
+      final SupportedValidationModule validationType) {
     staticFhirValidation.tgrCurrentRequestBodyAtIsValidFHIRRessourceOfType(validationType);
   }
 
-  @Then("TGR current request body is a valid {supportedValidationModule} resource and conforms to profile {string}")
-  @Then("FHIR current request body is a valid {supportedValidationModule} resource and conforms to profile {string}")
-  @Wenn("FHIR die aktuelle Anfrage im Body eine gültige {supportedValidationModule} Ressource, die zum Profil {string} konform ist enthält")
-  @Dann("FHIR prüfe die aktuelle Anfrage enthält im Body eine gültige {supportedValidationModule} Ressource, die zum Profil {string} konform ist")
+  @Then(
+      "FHIR current request body is a valid {supportedValidationModule} resource and conforms to"
+          + " profile {string}")
+  @Wenn(
+      "FHIR die aktuelle Anfrage im Body eine gültige {supportedValidationModule} Ressource, die"
+          + " zum Profil {string} konform ist enthält")
+  @Dann(
+      "FHIR prüfe die aktuelle Anfrage enthält im Body eine gültige {supportedValidationModule}"
+          + " Ressource, die zum Profil {string} konform ist")
   public void tgrCurrentRequestBodyAtIsValidFHIRRessourceOfType(
-          final SupportedValidationModule validationType, String profileUrl) {
-    staticFhirValidation.tgrCurrentRequestBodyAtIsValidFHIRRessourceOfType(validationType, profileUrl);
+      final SupportedValidationModule validationType, String profileUrl) {
+    staticFhirValidation.tgrCurrentRequestBodyAtIsValidFHIRRessourceOfType(
+        validationType, profileUrl);
   }
 
-  @Then("TGR current request {string} is a valid {supportedValidationModule} resource")
   @Then("FHIR current request at {string} is a valid {supportedValidationModule} resource")
-  @Wenn("FHIR die aktuelle Anfrage im Knoten {string} eine gültige {supportedValidationModule} Ressource enthält")
-  @Dann("FHIR prüfe die aktuelle Anfrage enthält im Knoten {string} eine gültige {supportedValidationModule} Ressource")
-  public void tgrCurrentRequestAtIsValidFHIRRessourceOfType(final String rbelPath,
-      final SupportedValidationModule validationType) {
+  @Wenn(
+      "FHIR die aktuelle Anfrage im Knoten {string} eine gültige {supportedValidationModule}"
+          + " Ressource enthält")
+  @Dann(
+      "FHIR prüfe die aktuelle Anfrage enthält im Knoten {string} eine gültige"
+          + " {supportedValidationModule} Ressource")
+  public void tgrCurrentRequestAtIsValidFHIRRessourceOfType(
+      final String rbelPath, final SupportedValidationModule validationType) {
     staticFhirValidation.tgrCurrentRequestAtIsValidFHIRRessourceOfType(rbelPath, validationType);
   }
 
-  @Then("TGR current request {string} is a valid {supportedValidationModule} resource and conforms to profile {string}")
-  @Then("FHIR current request at {string} is a valid {supportedValidationModule} resource and conforms to profile {string}")
-  @Wenn("FHIR die aktuelle Anfrage im Knoten {string} eine gültige {supportedValidationModule} Ressource, die zum Profil {string} konform ist enthält")
-  @Dann("FHIR prüfe die aktuelle Anfrage enthält im Knoten {string} eine gültige {supportedValidationModule} Ressource, die zum Profil {string} konform ist")
-  public void tgrCurrentRequestAtIsValidFHIRRessourceOfType(final String rbelPath,
-                                                            final SupportedValidationModule validationType, String profileUrl) {
-    staticFhirValidation.tgrCurrentRequestAtIsValidFHIRRessourceOfType(rbelPath, validationType, profileUrl);
+  @Then(
+      "FHIR current request at {string} is a valid {supportedValidationModule} resource and"
+          + " conforms to profile {string}")
+  @Wenn(
+      "FHIR die aktuelle Anfrage im Knoten {string} eine gültige {supportedValidationModule}"
+          + " Ressource, die zum Profil {string} konform ist enthält")
+  @Dann(
+      "FHIR prüfe die aktuelle Anfrage enthält im Knoten {string} eine gültige"
+          + " {supportedValidationModule} Ressource, die zum Profil {string} konform ist")
+  public void tgrCurrentRequestAtIsValidFHIRRessourceOfType(
+      final String rbelPath, final SupportedValidationModule validationType, String profileUrl) {
+    staticFhirValidation.tgrCurrentRequestAtIsValidFHIRRessourceOfType(
+        rbelPath, validationType, profileUrl);
   }
 
-
-
-  @Then("TGR current response body is a valid {supportedValidationModule} resource")
   @Then("FHIR current response body is a valid {supportedValidationModule} resource")
-  @Wenn("FHIR die aktuelle Antwort im Body eine gültige {supportedValidationModule} Ressource enthält")
-  @Dann("FHIR prüfe die aktuelle Antwort enthält im Body eine gültige {supportedValidationModule} Ressource")
+  @Wenn(
+      "FHIR die aktuelle Antwort im Body eine gültige {supportedValidationModule} Ressource"
+          + " enthält")
+  @Dann(
+      "FHIR prüfe die aktuelle Antwort enthält im Body eine gültige {supportedValidationModule}"
+          + " Ressource")
   public void tgrCurrentResponseBodyAtIsValidFHIRRessourceOfType(
       final SupportedValidationModule validationType) {
     staticFhirValidation.tgrCurrentResponseBodyAtIsValidFHIRRessourceOfType(validationType);
   }
 
-  @Then("TGR current response body is a valid {supportedValidationModule} resource and conforms to profile {string}")
-  @Then("FHIR current response body is a valid {supportedValidationModule} resource and conforms to profile {string}")
-  @Wenn("FHIR die aktuelle Antwort im Body eine gültige {supportedValidationModule} Ressource, die zum Profil {string} konform ist enthält")
-  @Dann("FHIR prüfe die aktuelle Antwort enthält im Body eine gültige {supportedValidationModule} Ressource, die zum Profil {string} konform ist")
+  @Then(
+      "FHIR current response body is a valid {supportedValidationModule} resource and conforms to"
+          + " profile {string}")
+  @Wenn(
+      "FHIR die aktuelle Antwort im Body eine gültige {supportedValidationModule} Ressource, die"
+          + " zum Profil {string} konform ist enthält")
+  @Dann(
+      "FHIR prüfe die aktuelle Antwort enthält im Body eine gültige {supportedValidationModule}"
+          + " Ressource, die zum Profil {string} konform ist")
   public void tgrCurrentResponseBodyAtIsValidFHIRRessourceOfType(
-          final SupportedValidationModule validationType, String profileUrl) {
-    staticFhirValidation.tgrCurrentResponseBodyAtIsValidFHIRRessourceOfType(validationType, profileUrl);
+      final SupportedValidationModule validationType, String profileUrl) {
+    staticFhirValidation.tgrCurrentResponseBodyAtIsValidFHIRRessourceOfType(
+        validationType, profileUrl);
   }
 
-  @Then("TGR current response {string} is a valid FHIR {supportedValidationModule} resource")
   @Then("FHIR current response at {string} is a valid FHIR {supportedValidationModule} resource")
-  @Wenn("FHIR die aktuelle Antwort im Knoten {string} eine gültige {supportedValidationModule} Ressource enthält")
-  @Dann("FHIR prüfe die aktuelle Antwort enthält im Knoten {string} eine gültige {supportedValidationModule} Ressource")
-  public void tgrCurrentResponseAtIsValidFHIRRessourceOfType(final String rbelPath,
-      final SupportedValidationModule validationType) {
+  @Wenn(
+      "FHIR die aktuelle Antwort im Knoten {string} eine gültige {supportedValidationModule}"
+          + " Ressource enthält")
+  @Dann(
+      "FHIR prüfe die aktuelle Antwort enthält im Knoten {string} eine gültige"
+          + " {supportedValidationModule} Ressource")
+  public void tgrCurrentResponseAtIsValidFHIRRessourceOfType(
+      final String rbelPath, final SupportedValidationModule validationType) {
     staticFhirValidation.tgrCurrentResponseAtIsValidFHIRRessourceOfType(rbelPath, validationType);
   }
 
-  @Then("TGR current response {string} is a valid FHIR {supportedValidationModule} resource and conforms to profile {string}")
-  @Then("FHIR current response at {string} is a valid FHIR {supportedValidationModule} resource and conforms to profile {string}")
-  @Wenn("FHIR die aktuelle Antwort im Knoten {string} eine gültige {supportedValidationModule} Ressource, die zum Profil {string} konform ist enthält")
-  @Dann("FHIR prüfe die aktuelle Antwort enthält im Knoten {string} eine gültige {supportedValidationModule} Ressource, die zum Profil {string} konform ist")
-  public void tgrCurrentResponseAtIsValidFHIRRessourceOfType(final String rbelPath,
-                                                             final SupportedValidationModule validationType, String profileUrl) {
-    staticFhirValidation.tgrCurrentResponseAtIsValidFHIRRessourceOfType(rbelPath, validationType, profileUrl);
+  @Then(
+      "FHIR current response at {string} is a valid FHIR {supportedValidationModule} resource and"
+          + " conforms to profile {string}")
+  @Wenn(
+      "FHIR die aktuelle Antwort im Knoten {string} eine gültige {supportedValidationModule}"
+          + " Ressource, die zum Profil {string} konform ist enthält")
+  @Dann(
+      "FHIR prüfe die aktuelle Antwort enthält im Knoten {string} eine gültige"
+          + " {supportedValidationModule} Ressource, die zum Profil {string} konform ist")
+  public void tgrCurrentResponseAtIsValidFHIRRessourceOfType(
+      final String rbelPath, final SupportedValidationModule validationType, String profileUrl) {
+    staticFhirValidation.tgrCurrentResponseAtIsValidFHIRRessourceOfType(
+        rbelPath, validationType, profileUrl);
   }
 }

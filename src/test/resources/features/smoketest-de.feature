@@ -33,12 +33,11 @@ Funktionalität: FHIR Validation Deutsch
     """
       Bundle.entry.resource.author.type.where(value != "Practitioner" and value != "Device").exists().not()
       Bundle.entry.resource.author.type.where(value != "Device") != "${tiger.my.configurable.author.type.invalid}"
-
     """
     Und FHIR die aktuelle Antwort im Body die FHIRPath Ausdrücke erfüllt:
     """
-    (Bundle.entry.count() < 7 and Bundle.entry.resource.author.count() > 2).not()
-    Bundle.entry.resource.author.where(type.value.matches("D.*i.+")).type != "Dinosaur"
+      (Bundle.entry.count() < 7 and Bundle.entry.resource.author.count() > 2).not()
+      Bundle.entry.resource.author.where(type.value.matches("D.*i.+")).type != "Dinosaur"
     """
 
   Szenario: Reports der vorhergehenden Szenarien sollen alle Details enthalten
@@ -54,7 +53,6 @@ Funktionalität: FHIR Validation Deutsch
     evidence-type-WARN"
     evidence-type-ERROR"
     """
-
     Und in "target/evidences/" exists a file matching "^evidence_FHIR-Validierung_mit_Hilfe_des_Referenz_Validators_und_Custom_Profilen_[0-9].+\.html$" containing all of the following lines:
     """
     FHIR-Validierung mit Hilfe des Referenz Validators und Custom Profilen
@@ -67,7 +65,6 @@ Funktionalität: FHIR Validation Deutsch
     """
     evidence-type-ERROR"
     """
-
     Und in "target/evidences/" exists a file matching "^evidence_FHIR-Validierung_mit_FHIRPath_.+\.html$" containing all of the following lines:
     """
     FHIR-Validierung mit FHIRPath

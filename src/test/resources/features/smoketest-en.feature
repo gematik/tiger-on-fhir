@@ -21,7 +21,6 @@ Feature: FHIR Validation English
     Then FHIR current response body is a valid ISIK1 resource and conforms to profile "https://gematik.de/fhir/ISiK/StructureDefinition/ISiKAngehoeriger"
     Then FHIR current request at '$.body' is a valid ISIK1 resource and conforms to profile "https://gematik.de/fhir/ISiK/StructureDefinition/ISiKAngehoeriger"
 
-
   Scenario: FHIR-Validation with FHIRPath
     Given TGR reads the following .tgr file 'src/test/resources/fhir.tgr'
     When TGR find request to path '/erp/42'
@@ -34,12 +33,11 @@ Feature: FHIR Validation English
     """
       Bundle.entry.resource.author.type.where(value != "Practitioner" and value != "Device").exists().not()
       Bundle.entry.resource.author.type.where(value != "Device") != "${tiger.my.configurable.author.type.invalid}"
-
     """
     When FHIR current response body evaluates the FHIRPaths:
     """
-    (Bundle.entry.count() < 7 and Bundle.entry.resource.author.count() > 2).not()
-    Bundle.entry.resource.author.where(type.value.matches("D.*i.+")).type != "Dinosaur"
+      (Bundle.entry.count() < 7 and Bundle.entry.resource.author.count() > 2).not()
+      Bundle.entry.resource.author.where(type.value.matches("D.*i.+")).type != "Dinosaur"
     """
 
   Scenario: Report of previous scenarios should exist and contain its Details
