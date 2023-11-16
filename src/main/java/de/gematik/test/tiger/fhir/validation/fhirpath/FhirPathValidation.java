@@ -19,6 +19,7 @@ package de.gematik.test.tiger.fhir.validation.fhirpath;
 import static de.gematik.test.tiger.common.config.TigerGlobalConfiguration.resolvePlaceholders;
 import static org.assertj.core.api.Assertions.fail;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
+
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.support.DefaultProfileValidationSupport;
 import ca.uhn.fhir.parser.IParser;
@@ -41,16 +42,16 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * FHIRPath validation.
- * <p>
- * It allows you fo perform boolean FHIRPath expressions on requests and responses and to check if
- * they evaluate as expected.
+ *
+ * <p>It allows you fo perform boolean FHIRPath expressions on requests and responses and to check
+ * if they evaluate as expected.
  */
 @RequiredArgsConstructor
 public class FhirPathValidation {
 
   private static final FhirContext ctx = FhirContext.forR4();
-  private static final FHIRPathEngine fhirPathEngine = new FHIRPathEngine(
-      new HapiWorkerContext(ctx, new DefaultProfileValidationSupport(ctx)));
+  private static final FHIRPathEngine fhirPathEngine =
+      new FHIRPathEngine(new HapiWorkerContext(ctx, new DefaultProfileValidationSupport(ctx)));
 
   public static final String RBEL_SELECTOR_FOR_CONTENT_TYPE_HEADER = "$.header.Content-Type";
   public static final String RBEL_SELECTOR_FOR_BODY = "$.body";
@@ -58,7 +59,8 @@ public class FhirPathValidation {
   private final EvidenceRecorder evidenceRecorder;
   private final NetTracer netTracer;
 
-  public void tgrCurrentRequestBodyEvaluatesTheFhirPath(final String fhirPath, final Optional<String> errorMessage) {
+  public void tgrCurrentRequestBodyEvaluatesTheFhirPath(
+      final String fhirPath, final Optional<String> errorMessage) {
     tgrCurrentRequestEvaluatesTheFhirPath(RBEL_SELECTOR_FOR_BODY, fhirPath, errorMessage);
   }
 
@@ -66,13 +68,12 @@ public class FhirPathValidation {
     tgrCurrentRequestEvaluatesTheFhirPath(RBEL_SELECTOR_FOR_BODY, fhirPath, Optional.empty());
   }
 
-  public void tgrCurrentRequestEvaluatesTheFhirPath(final String rbelPath,
-      final String fhirPath) {
+  public void tgrCurrentRequestEvaluatesTheFhirPath(final String rbelPath, final String fhirPath) {
     tgrCurrentRequestEvaluatesTheFhirPaths(rbelPath, fhirPath, Optional.empty());
   }
 
-  public void tgrCurrentRequestEvaluatesTheFhirPath(final String rbelPath,
-      final String fhirPath, final Optional<String> errorMessage) {
+  public void tgrCurrentRequestEvaluatesTheFhirPath(
+      final String rbelPath, final String fhirPath, final Optional<String> errorMessage) {
     tgrCurrentRequestEvaluatesTheFhirPaths(rbelPath, fhirPath, errorMessage);
   }
 
@@ -80,13 +81,13 @@ public class FhirPathValidation {
     tgrCurrentRequestEvaluatesTheFhirPaths(RBEL_SELECTOR_FOR_BODY, fhirPaths, Optional.empty());
   }
 
-  public void tgrCurrentRequestEvaluatesTheFhirPaths(final String rbelPath,
-      final String fhirPaths) {
+  public void tgrCurrentRequestEvaluatesTheFhirPaths(
+      final String rbelPath, final String fhirPaths) {
     tgrCurrentRequestEvaluatesTheFhirPaths(rbelPath, fhirPaths, Optional.empty());
   }
 
-  public void tgrCurrentRequestEvaluatesTheFhirPaths(final String rbelPath,
-      final String fhirPaths, final Optional<String> errorMessage) {
+  public void tgrCurrentRequestEvaluatesTheFhirPaths(
+      final String rbelPath, final String fhirPaths, final Optional<String> errorMessage) {
     final Optional<String> fhirRessource = findElementInCurrentRequest(rbelPath);
 
     if (fhirRessource.isEmpty()) {
@@ -95,48 +96,48 @@ public class FhirPathValidation {
 
     final IBaseResource ressource = parseRequestByContentType(fhirRessource.get());
 
-    assertSoftly(softAsserter ->
-        toCleanFhirPath(fhirPaths)
-            .map(TigerGlobalConfiguration::resolvePlaceholders)
-            .forEach(fhirPath -> evaluate(fhirPath, (Base) ressource, softAsserter, errorMessage)));
+    assertSoftly(
+        softAsserter ->
+            toCleanFhirPath(fhirPaths)
+                .map(TigerGlobalConfiguration::resolvePlaceholders)
+                .forEach(
+                    fhirPath -> evaluate(fhirPath, (Base) ressource, softAsserter, errorMessage)));
   }
 
   @NotNull
   private static Stream<String> toCleanFhirPath(final String fhirPaths) {
-    return fhirPaths.lines()
-        .filter(it -> !it.isBlank())
-        .map(String::trim);
+    return fhirPaths.lines().filter(it -> !it.isBlank()).map(String::trim);
   }
 
   public void tgrCurrentResponseBodyEvaluatesTheFhirPath(final String fhirPath) {
     tgrCurrentResponseEvaluatesTheFhirPath(RBEL_SELECTOR_FOR_BODY, fhirPath, Optional.empty());
   }
 
-  public void tgrCurrentResponseBodyEvaluatesTheFhirPath(final String fhirPath, final Optional<String> errorMessage) {
+  public void tgrCurrentResponseBodyEvaluatesTheFhirPath(
+      final String fhirPath, final Optional<String> errorMessage) {
     tgrCurrentResponseEvaluatesTheFhirPath(RBEL_SELECTOR_FOR_BODY, fhirPath, errorMessage);
   }
 
-  public void tgrCurrentResponseEvaluatesTheFhirPath(final String rbelPath,
-      final String fhirPath) {
+  public void tgrCurrentResponseEvaluatesTheFhirPath(final String rbelPath, final String fhirPath) {
     tgrCurrentResponseEvaluatesTheFhirPaths(rbelPath, fhirPath, Optional.empty());
   }
 
-  public void tgrCurrentResponseEvaluatesTheFhirPath(final String rbelPath,
-      final String fhirPath, final Optional<String> errorMessage) {
+  public void tgrCurrentResponseEvaluatesTheFhirPath(
+      final String rbelPath, final String fhirPath, final Optional<String> errorMessage) {
     tgrCurrentResponseEvaluatesTheFhirPaths(rbelPath, fhirPath, errorMessage);
   }
 
-  public void tgrCurrentResponseBodyEvaluatesTheFhirPaths(
-      final String fhirPaths) {
+  public void tgrCurrentResponseBodyEvaluatesTheFhirPaths(final String fhirPaths) {
     tgrCurrentResponseEvaluatesTheFhirPaths(RBEL_SELECTOR_FOR_BODY, fhirPaths, Optional.empty());
   }
 
-  public void tgrCurrentResponseEvaluatesTheFhirPaths(final String rbelPath, final String fhirPaths) {
+  public void tgrCurrentResponseEvaluatesTheFhirPaths(
+      final String rbelPath, final String fhirPaths) {
     tgrCurrentResponseEvaluatesTheFhirPaths(rbelPath, fhirPaths, Optional.empty());
   }
 
-  public void tgrCurrentResponseEvaluatesTheFhirPaths(final String rbelPath,
-      final String fhirPaths, final Optional<String> errorMessage) {
+  public void tgrCurrentResponseEvaluatesTheFhirPaths(
+      final String rbelPath, final String fhirPaths, final Optional<String> errorMessage) {
     final Optional<String> fhirRessource = findElementInCurrentResponse(rbelPath);
     if (fhirRessource.isEmpty()) {
       return;
@@ -144,20 +145,19 @@ public class FhirPathValidation {
 
     final IBaseResource ressource = parseResponseByContentType(fhirRessource.get());
 
-    assertSoftly(softAsserter ->
-        toCleanFhirPath(fhirPaths)
-            .map(TigerGlobalConfiguration::resolvePlaceholders)
-            .forEach(fhirPath -> evaluate(fhirPath, (Base) ressource, softAsserter, errorMessage)));
+    assertSoftly(
+        softAsserter ->
+            toCleanFhirPath(fhirPaths)
+                .map(TigerGlobalConfiguration::resolvePlaceholders)
+                .forEach(
+                    fhirPath -> evaluate(fhirPath, (Base) ressource, softAsserter, errorMessage)));
   }
-
 
   public void tgrCurrentRequestBodyFailesTheFhirPath(final String fhirPath) {
     tgrCurrentRequestFailsTheFhirPath(RBEL_SELECTOR_FOR_BODY, fhirPath);
   }
 
-
-  public void tgrCurrentRequestFailsTheFhirPath(final String rbelPath,
-      final String fhirPath) {
+  public void tgrCurrentRequestFailsTheFhirPath(final String rbelPath, final String fhirPath) {
     final Optional<String> fhirRessource = findElementInCurrentRequest(rbelPath);
     if (fhirRessource.isEmpty()) {
       return;
@@ -168,14 +168,11 @@ public class FhirPathValidation {
     assertSoftly(soft -> evaluateFail(resolvePlaceholders(fhirPath), (Base) ressource, soft));
   }
 
-
   public void tgrCurrentResponseBodyFailsTheFhirPath(final String fhirPath) {
     tgrCurrentResponseFailsTheFhirPath(RBEL_SELECTOR_FOR_BODY, fhirPath);
   }
 
-
-  public void tgrCurrentResponseFailsTheFhirPath(final String rbelPath,
-      final String fhirPath) {
+  public void tgrCurrentResponseFailsTheFhirPath(final String rbelPath, final String fhirPath) {
     final Optional<String> fhirResource = findElementInCurrentResponse(rbelPath);
     if (fhirResource.isEmpty()) {
       return;
@@ -191,12 +188,12 @@ public class FhirPathValidation {
     try {
       evaluationResult = fhirPathEngine.evaluate(options.ressource, fhirPath);
     } catch (final FHIRException e) {
-      evidenceRecorder.recordEvidence(
-          new Evidence(Type.FATAL, "invalid FHIRPath: " + fhirPath, e));
+      evidenceRecorder.recordEvidence(new Evidence(Type.FATAL, "invalid FHIRPath: " + fhirPath, e));
 
       Optional.ofNullable(options.errorMessage)
-          .ifPresentOrElse(options.softAsserter::fail, () -> options.softAsserter.fail(
-              "invalid FHIRPath: " + fhirPath, e));
+          .ifPresentOrElse(
+              options.softAsserter::fail,
+              () -> options.softAsserter.fail("invalid FHIRPath: " + fhirPath, e));
       return;
     }
 
@@ -204,54 +201,75 @@ public class FhirPathValidation {
       return;
     }
 
-    if (verifyNonBooleanResult(evaluationResult, fhirPath, options.softAsserter)) { //Test
+    if (verifyNonBooleanResult(evaluationResult, fhirPath, options.softAsserter)) { // Test
       return;
     }
 
     final long numberOfTargetValues =
-        options.expectedOutcome ? numberOfTrueValues(evaluationResult)
+        options.expectedOutcome
+            ? numberOfTrueValues(evaluationResult)
             : numberOfFalseValues(evaluationResult);
     final String targetValueString = options.expectedOutcome ? "true" : "false";
 
     if (numberOfTargetValues > 0) {
-      evidenceRecorder.recordEvidence(new Evidence(Type.ERROR, numberOfTargetValues +
-          " value(s) in the evaluation results are " + targetValueString + " for: "
-          + fhirPath,
-          evaluationResult));
-      options.softAsserter.fail(Optional.ofNullable(options.errorMessage).orElseGet(
-          () -> numberOfTargetValues + " value(s) in the evaluation results are " + targetValueString + " for: "
-              + fhirPath));
+      evidenceRecorder.recordEvidence(
+          new Evidence(
+              Type.ERROR,
+              numberOfTargetValues
+                  + " value(s) in the evaluation results are "
+                  + targetValueString
+                  + " for: "
+                  + fhirPath,
+              evaluationResult));
+      options.softAsserter.fail(
+          Optional.ofNullable(options.errorMessage)
+              .orElseGet(
+                  () ->
+                      numberOfTargetValues
+                          + " value(s) in the evaluation results are "
+                          + targetValueString
+                          + " for: "
+                          + fhirPath));
       return;
     }
 
     evidenceRecorder.recordEvidence(new Evidence(Type.INFO, fhirPath, evaluationResult));
   }
 
-  private void evaluate(final String fhirPath, final Base ressource, final SoftAssertions softly,
+  private void evaluate(
+      final String fhirPath,
+      final Base ressource,
+      final SoftAssertions softly,
       final Optional<String> errorMessage) {
-    evaluate(fhirPath, EvaluateOptions.builder()
-        .ressource(ressource)
-        .softAsserter(softly)
-        .errorMessage(errorMessage.orElse(null))
-        .expectedOutcome(false)
-        .build());
+    evaluate(
+        fhirPath,
+        EvaluateOptions.builder()
+            .ressource(ressource)
+            .softAsserter(softly)
+            .errorMessage(errorMessage.orElse(null))
+            .expectedOutcome(false)
+            .build());
   }
 
-  private void evaluateFail(final String fhirPath, final Base ressource,
-      final SoftAssertions softly) {
-    evaluate(fhirPath, EvaluateOptions.builder()
-        .ressource(ressource)
-        .softAsserter(softly)
-        .expectedOutcome(true)
-        .build());
+  private void evaluateFail(
+      final String fhirPath, final Base ressource, final SoftAssertions softly) {
+    evaluate(
+        fhirPath,
+        EvaluateOptions.builder()
+            .ressource(ressource)
+            .softAsserter(softly)
+            .expectedOutcome(true)
+            .build());
   }
 
-  private boolean verifyNonBooleanResult(final List<Base> evaluationResult, final String fhirPath,
-      final SoftAssertions softly) {
+  private boolean verifyNonBooleanResult(
+      final List<Base> evaluationResult, final String fhirPath, final SoftAssertions softly) {
     final var numberOfNonBooleans = numberOfNonBooleanResults(evaluationResult);
     if (numberOfNonBooleans > 0) {
       evidenceRecorder.recordEvidence(
-          new Evidence(Type.ERROR, numberOfNonBooleans + " non boolean results for: " + fhirPath,
+          new Evidence(
+              Type.ERROR,
+              numberOfNonBooleans + " non boolean results for: " + fhirPath,
               evaluationResult));
       softly.fail(numberOfNonBooleans + " non boolean results for: " + fhirPath);
       return true;
@@ -259,12 +277,11 @@ public class FhirPathValidation {
     return false;
   }
 
-  private boolean verifyEmptyResult(final String fhirPath, final List<Base> evaluationResult,
-      final SoftAssertions softly) {
+  private boolean verifyEmptyResult(
+      final String fhirPath, final List<Base> evaluationResult, final SoftAssertions softly) {
     if (evaluationResult.isEmpty()) {
       evidenceRecorder.recordEvidence(
-          new Evidence(Type.ERROR, "Empty results for: " + fhirPath,
-              evaluationResult));
+          new Evidence(Type.ERROR, "Empty results for: " + fhirPath, evaluationResult));
       softly.fail("Empty results for: " + fhirPath);
       return true;
     }
@@ -272,26 +289,20 @@ public class FhirPathValidation {
   }
 
   private static long numberOfFalseValues(final List<Base> evaluationResult) {
-    return evaluationResult.stream()
-        .filter(it -> !it.castToBoolean(it).booleanValue())
-        .count();
+    return evaluationResult.stream().filter(it -> !it.castToBoolean(it).booleanValue()).count();
   }
 
   private static long numberOfTrueValues(final List<Base> evaluationResult) {
-    return evaluationResult.stream()
-        .filter(it -> it.castToBoolean(it).booleanValue())
-        .count();
+    return evaluationResult.stream().filter(it -> it.castToBoolean(it).booleanValue()).count();
   }
 
   private static long numberOfNonBooleanResults(final List<Base> evaluationResult) {
-    return evaluationResult.stream().filter(it -> !it.isBooleanPrimitive())
-        .count();
+    return evaluationResult.stream().filter(it -> !it.isBooleanPrimitive()).count();
   }
 
   @SuppressWarnings("java:S2259")
   private IBaseResource parseRequestByContentType(final String fhirResource) {
-    return getParserByRequestContentType()
-        .parseResource(fhirResource);
+    return getParserByRequestContentType().parseResource(fhirResource);
   }
 
   private Optional<String> findElementInCurrentRequest(final String rbelPath) {
@@ -307,10 +318,8 @@ public class FhirPathValidation {
 
   @SuppressWarnings("java:S2259")
   private IBaseResource parseResponseByContentType(final String fhirResource) {
-    return getParserByResponseContentType()
-        .parseResource(fhirResource);
+    return getParserByResponseContentType().parseResource(fhirResource);
   }
-
 
   private Optional<String> findElementInCurrentResponse(final String rbelPath) {
     var element = netTracer.getCurrentResponseRawStringByRbelPath(rbelPath);
@@ -322,25 +331,24 @@ public class FhirPathValidation {
     }
 
     return element;
-
   }
 
   private IParser getParserByResponseContentType() {
-    final Optional<IParser> parser = getResponseContentType()
-        .flatMap(this::getParserForContentTypeHeader);
+    final Optional<IParser> parser =
+        getResponseContentType().flatMap(this::getParserForContentTypeHeader);
 
     if (parser.isEmpty()) {
       evidenceRecorder.recordEvidence(new Evidence(Type.ERROR, "no Content-Type Header set"));
       fail("no Content-Type Header set for Response");
-      return null;// unreachable
+      return null; // unreachable
     }
 
     return parser.get();
   }
 
   private IParser getParserByRequestContentType() {
-    final Optional<IParser> parser = getRequestContentType()
-        .flatMap(this::getParserForContentTypeHeader);
+    final Optional<IParser> parser =
+        getRequestContentType().flatMap(this::getParserForContentTypeHeader);
 
     if (parser.isEmpty()) {
       evidenceRecorder.recordEvidence(new Evidence(Type.ERROR, "no Content-Type Header set"));
@@ -377,6 +385,5 @@ public class FhirPathValidation {
     private final SoftAssertions softAsserter;
     private final boolean expectedOutcome;
     private final String errorMessage;
-
   }
 }
