@@ -6,7 +6,7 @@
 
     <groupId>de.gematik.test.tiger</groupId>
     <artifactId>tiger-on-fhir</artifactId>
-    <version>1.2.0</version>
+    <version>1.2.1</version>
     <packaging>jar</packaging>
     <description>tiger-on-fhir</description>
     <url>https://github.com/gematik/tiger-on-fhir</url>
@@ -23,7 +23,7 @@
     </issueManagement>
     <organization>
         <name>gematik GmbH</name>
-        <url>http://www.gematik.de</url>
+        <url>https://www.gematik.de</url>
     </organization>
 
     <licenses>
@@ -65,7 +65,7 @@
         <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
         <sonar.language>java</sonar.language>
 
-        <tiger.version>2.2.1</tiger.version>
+        <tiger.version>2.3.2</tiger.version>
         <junit5.version>5.10.0</junit5.version>
         <refv.version>1.1.0</refv.version>
         <javax.version>1.3.2</javax.version>
@@ -79,6 +79,12 @@
             <groupId>de.gematik.test</groupId>
             <artifactId>tiger-test-lib</artifactId>
             <version>${tiger.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.30</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -175,7 +181,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.11.0</version>
+                <version>3.12.1</version>
                 <configuration>
                     <encoding>${project.build.sourceEncoding}</encoding>
                 </configuration>
@@ -196,7 +202,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.1.2</version>
+                <version>3.2.3</version>
                 <configuration>
                     <argLine>
                         ${argLine}
@@ -212,7 +218,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <version>3.1.2</version>
+                <version>3.2.3</version>
                 <configuration>
                     <!--
                         WorkflowUI needs this to allow it to block execution of maven,

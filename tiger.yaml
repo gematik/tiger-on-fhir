@@ -15,3 +15,6 @@ my:
         valid: "Device"
         invalid: "Dinosaur"
     fhirpathExpression: "Bundle.entry.resource.author.type.where(value = \"Device\").exists()"
+
+  artefacts:
+    folder: "target/evidences/"

@@ -1,5 +1,10 @@
 # Changelog tiger-on-fhir
 
+# Release 1.2.1
+
+* Upgrade to upcoming Tiger 3.0.0 release
+* TGRFHIR-11: all BDD steps now do resolve their params using TigerGlobalConfiguration and JEXL Executor. This means you can use properties defined in your tiger yamls and JEXL / RbelPath expressions as parameters for your FHIR BDD steps.
+
 # Release 1.2.0
 
 * TGRISIK-12: Updates the reference validator

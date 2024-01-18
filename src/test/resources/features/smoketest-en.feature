@@ -41,19 +41,19 @@ Feature: FHIR Validation English
     """
 
   Scenario: Report of previous scenarios should exist and contain its Details
-    Then in "target/evidences/" exists a file matching "^evidence_FHIR-Validation_with_the_help_of_the_reference-validators_[0-9].+\.html$" containing all of the following lines:
+    Then in "${tiger.my.artefacts.folder}" exists a file matching "^evidence_FHIR-Validation_with_the_help_of_the_reference-validators_[0-9].+\.html$" containing all of the following lines:
     """
     FHIR-Validation with the help of the reference-validators
     Then FHIR current request body is a valid ERP resource
     Then FHIR current response body is a valid ERP resource
     evidence-type-INFO"
     """
-    And in "target/evidences/" exists no file matching "^evidence_FHIR-Validation_with_the_help_of_the_reference-validators_[0-9].+\.html$" containing any of the following lines:
+    And in "${tiger.my.artefacts.folder}" exists no file matching "^evidence_FHIR-Validation_with_the_help_of_the_reference-validators_[0-9].+\.html$" containing any of the following lines:
     """
     evidence-type-WARN"
     evidence-type-ERROR"
     """
-    And in "target/evidences/" exists a file matching "^evidence_FHIR-Validation_with_the_help_of_the_reference-validators_and_custom_profile_[0-9].+\.html$" containing all of the following lines:
+    And in "${tiger.my.artefacts.folder}" exists a file matching "^evidence_FHIR-Validation_with_the_help_of_the_reference-validators_and_custom_profile_[0-9].+\.html$" containing all of the following lines:
     """
     FHIR-Validation with the help of the reference-validators
     Then FHIR current request body is a valid ISIK1 resource
