@@ -6,8 +6,7 @@ servers: {
 
 tigerProxy:
   adminPort: 12345
-  fileSaveInfo:
-    sourceFile: "./src/test/resources/fhir.tgr"
+
 my:
   configurable:
     author:

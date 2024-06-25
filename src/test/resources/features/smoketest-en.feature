@@ -1,5 +1,8 @@
 Feature: FHIR Validation English
 
+  Background:
+    Given TGR clear recorded messages
+
   Scenario: FHIR-Validation with the help of the reference-validators
     Given TGR reads the following .tgr file 'src/test/resources/fhir.tgr'
     When TGR find request to path '/erp/42'
@@ -9,17 +12,10 @@ Feature: FHIR Validation English
     Then FHIR current request at '$.body' is a valid ERP resource
 
   Scenario: FHIR-Validation with the help of the reference-validators and custom profile
-    Given TGR reads the following .tgr file 'src/test/resources/fhir-custom-profile-data.tgr'
-    When TGR find request to path '/isik1/validInOwnProfile'
-    Then FHIR current request body is a valid ISIK1 resource
-    Then FHIR current request at '$.body' is a valid ISIK1 resource
-    Then FHIR current response body is a valid ISIK1 resource
-    Then FHIR current request at '$.body' is a valid ISIK1 resource
-    When TGR find request to path '/isik1/invalidOwnProfile'
-    Then FHIR current request body is a valid ISIK1 resource and conforms to profile "https://gematik.de/fhir/ISiK/StructureDefinition/ISiKAngehoeriger"
-    Then FHIR current request at '$.body' is a valid ISIK1 resource and conforms to profile "https://gematik.de/fhir/ISiK/StructureDefinition/ISiKAngehoeriger"
-    Then FHIR current response body is a valid ISIK1 resource and conforms to profile "https://gematik.de/fhir/ISiK/StructureDefinition/ISiKAngehoeriger"
-    Then FHIR current request at '$.body' is a valid ISIK1 resource and conforms to profile "https://gematik.de/fhir/ISiK/StructureDefinition/ISiKAngehoeriger"
+    Given TGR reads the following .tgr file 'src/test/resources/fhir.tgr'
+    When TGR find request to path '/erp/42'
+    Then FHIR current request body is a valid ERP resource and conforms to profile "https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Bundle|1.1.0"
+    Then FHIR current request at '$.body' is a valid ERP resource and conforms to profile "https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Bundle|1.1.0"
 
   Scenario: FHIR-Validation with FHIRPath
     Given TGR reads the following .tgr file 'src/test/resources/fhir.tgr'
@@ -41,25 +37,25 @@ Feature: FHIR Validation English
     """
 
   Scenario: Report of previous scenarios should exist and contain its Details
-    Then in "${tiger.my.artefacts.folder}" exists a file matching "^evidence_FHIR-Validation_with_the_help_of_the_reference-validators_[0-9].+\.html$" containing all of the following lines:
+    Then in "target/evidences/" exists a file matching "^evidence_FHIR-Validation_with_the_help_of_the_reference-validators_[0-9].+\.html$" containing all of the following lines:
     """
     FHIR-Validation with the help of the reference-validators
     Then FHIR current request body is a valid ERP resource
     Then FHIR current response body is a valid ERP resource
     evidence-type-INFO"
     """
-    And in "${tiger.my.artefacts.folder}" exists no file matching "^evidence_FHIR-Validation_with_the_help_of_the_reference-validators_[0-9].+\.html$" containing any of the following lines:
+    And in "target/evidences/" exists no file matching "^evidence_FHIR-Validation_with_the_help_of_the_reference-validators_[0-9].+\.html$" containing any of the following lines:
     """
     evidence-type-WARN"
     evidence-type-ERROR"
     """
-    And in "${tiger.my.artefacts.folder}" exists a file matching "^evidence_FHIR-Validation_with_the_help_of_the_reference-validators_and_custom_profile_[0-9].+\.html$" containing all of the following lines:
+    And in "target/evidences/" exists a file matching "^evidence_FHIR-Validation_with_the_help_of_the_reference-validators_and_custom_profile_[0-9].+\.html$" containing all of the following lines:
     """
-    FHIR-Validation with the help of the reference-validators
-    Then FHIR current request body is a valid ISIK1 resource
-    Then FHIR current response body is a valid ISIK1 resource
-    evidence-type-INFO"
-    evidence-type-WARN"
+    FHIR-Validation with the help of the reference-validators and custom profile
+    Then FHIR current request body is a valid ERP resource and conforms to profile &quot;https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Bundle|1.1.0&quot;
+    Then FHIR current request at '$.body' is a valid ERP resource and conforms to profile &quot;https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Bundle|1.1.0&quot;
+    evidence-type-INFO
+    evidence-type-INFO
     """
     And in "target/evidences/" exists no file matching "^evidence_FHIR-Validation_with_the_help_of_the_reference-validators_and_custom_profile_[0-9].+\.html$" containing any of the following lines:
     """
@@ -76,3 +72,11 @@ Feature: FHIR Validation English
     evidence-type-WARN"
     evidence-type-ERROR"
     """
+
+  Scenario: FHIR-Validation using plugin with the help of the reference-validator
+    Given TGR reads the following .tgr file 'src/test/resources/fhir-plugins.tgr'
+    When TGR find request to path '/minimal/42'
+    Then FHIR current request body is a valid minimal resource
+    Then FHIR current response body is a valid minimal resource
+    When TGR find next request to path '.+'
+    Then FHIR current request at '$.body' is a valid minimal resource

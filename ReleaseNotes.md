@@ -1,5 +1,10 @@
 # Changelog tiger-on-fhir
 
+# Release 1.2.2
+* Added support for reference validator plugins
+* TGRFHIR-16: new test step for validating a fhirpath and storing the result into a variable added
+* versions for tiger, refvalidator, plugins and mockito updated
+
 # Release 1.2.1
 
 * Upgrade to upcoming Tiger 3.0.0 release
