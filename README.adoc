@@ -1,0 +1,78 @@
+= Tiger-On-FHIR
+
+image::doc/images/tiger2-plain.svg[title="TigerLogo"]
+
+== Tiger-On-FHIR extension
+
+Tiger-On-FHIR extension provides a set of simple BDD steps which can be used in combination with the Tiger RbelValidator steps to validate requests and responses.
+You can use the RbelValidator steps to filter request/responses and then check for valid FHIR content therein.
+
+It is an extension of the tiger frameworks.
+For further information regarding the tiger frameworks have a look at the link:https://gematik.github.io/app-Tiger/Tiger-User-Manual.pdf[User Manual].
+
+== What is Tiger
+
+Tiger is a BDD oriented test platform implemented by gematik GmbH.
+Take a look at our short pitch video explaining the basic idea of Tiger.
+
+image::doc/images/tiger-promo-screenie.png[link=https://youtu.be/eJJZDeuFlyI]
+
+== Version
+
+The following table shows the recommended combination of versions that should be used when using the tiger-on-fhir.
+
+[cols=2*]
+|===
+| tiger-on-fhir Version | Tiger Version
+| 1.2.3 | 3.1.1
+| 1.2.2 | 3.0.1
+| 1.2.1 | 2.3.2
+|===
+
+Here are some examples how to use the tiger-on-fhir extension in gherkin/feature files.
+
+[source,gherkin]
+--
+When TGR find request to path '/erp/42'
+When FHIR current request body evaluates the FHIRPath 'Bundle.entry.resource.author.type.where(value = "Device").exists()'
+When FHIR current response body evaluates the FHIRPath 'Bundle.entry.resource.author.type.where(value != "Dinosaur").exists()'
+When FHIR current request body fails the FHIRPath 'Bundle.entry.resource.author.type.where(value != "Practitioner" and value != "Device").exists()'
+When FHIR current request body evaluates the FHIRPaths:
+"""
+  Bundle.entry.resource.author.type.where(value != "Practitioner" and value != "Device").exists().not()
+  Bundle.entry.resource.author.type.where(value != "Device") != "Dinoaur"
+"""
+--
+
+In addition, you may also check complete messages for compliance with certain FHIR profiles.
+
+[source,gherkin]
+--
+When TGR find request to path '/erp/42'
+Then FHIR current request body is valid FHIR resource of type ERP
+Then FHIR current response body is valid FHIR resource of type ERP
+And FHIR current request '$.body' is valid FHIR resource of type erp
+--
+
+If you want to use Referenzvalidator plugins you have to add the following directory to your test-suite root directory: "refv-plugins/". The name of the directory is fixed and should NOT be changed. In the usage example above you can then either use the ids of intern Referenzvalidator validation modules (e.g. erp, eau, core or erpta7) or the id of a Referenzvalidator plugin you have added to "refv-plugins/".
+The folder structure for adding Referenzvalidator Plugins should look like this:
+....
+.
+└── refv-plugins/
+    ├── refv-plugin1.zip
+    └── refv-plugin2.zip
+....
+
+== Using other libraries / source code
+
+For the evidence reports we use the freemarker template engine.
+The FHIR validations are performed by the gematik FHIR Referenzvalidator engine, which itself is based upon the HAPI library.
+
+You can add as many plugins as you need. Said plugins can be found link:https://github.com/gematik/app-referencevalidator-plugins/releases[here]
+
+== References
+
+* FHIR link:https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ved=2ahUKEwiWoYuf_qj-AhWihf0HHV2lD6oQFnoECC0QAQ&url=https%3A%2F%2Fen.wikipedia.org%2Fwiki%2FFast_Healthcare_Interoperability_Resources&usg=AOvVaw03CHVmbv1gjhZQfZlNEnNG[Wikipedia]
+* FHIR link:https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ved=2ahUKEwiWoYuf_qj-AhWihf0HHV2lD6oQFnoECDAQAQ&url=https%3A%2F%2Fwww.hl7.org%2Ffhir%2Foverview.html&usg=AOvVaw2m5-s2cjorasSl4bfg0jp0[HL7]
+* FHIR link:https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&cad=rja&uact=8&ved=2ahUKEwjb5cvP_qj-AhVO_7sIHfhvDK8QFnoECA0QAQ&url=https%3A%2F%2Fhapifhir.io%2F&usg=AOvVaw0mku7swA105AKZ7EN0_Aem[HAPI]
+* gematik link:https://github.com/gematik/app-referencevalidator[FHIR Referenzvalidator Github]

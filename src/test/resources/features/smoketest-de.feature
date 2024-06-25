@@ -1,6 +1,9 @@
 #language: de
 Funktionalität: FHIR Validation Deutsch
 
+  Hintergrund:
+    Gegeben sei TGR lösche aufgezeichnete Nachrichten
+
   Szenario: FHIR-Validierung mit Hilfe des Referenz Validators
     Gegeben sei TGR liest folgende .tgr Datei 'src/test/resources/fhir.tgr'
     Wenn TGR finde die nächste Anfrage mit dem Pfad '/erp/42'
@@ -10,16 +13,10 @@ Funktionalität: FHIR Validation Deutsch
     Dann FHIR prüfe die aktuelle Antwort enthält im Knoten '$.body' eine gültige ERP Ressource
 
   Szenario: FHIR-Validierung mit Hilfe des Referenz Validators und Custom Profilen
-    Gegeben sei TGR liest folgende .tgr Datei 'src/test/resources/fhir-custom-profile-data.tgr'
-    Wenn TGR finde die nächste Anfrage mit dem Pfad '/isik1/validInOwnProfile'
-    Dann FHIR prüfe die aktuelle Anfrage enthält im Body eine gültige ISIK1 Ressource
-    Und FHIR prüfe die aktuelle Anfrage enthält im Knoten '$.body' eine gültige ISIK1 Ressource
-    Und FHIR prüfe die aktuelle Antwort enthält im Body eine gültige ISIK1 Ressource
-    Wenn TGR finde die nächste Anfrage mit dem Pfad '/isik1/invalidOwnProfile'
-    Dann FHIR prüfe die aktuelle Anfrage enthält im Body eine gültige ISIK1 Ressource, die zum Profil "https://gematik.de/fhir/ISiK/StructureDefinition/ISiKAngehoeriger" konform ist
-    Und FHIR prüfe die aktuelle Anfrage enthält im Knoten '$.body' eine gültige ISIK1 Ressource, die zum Profil "https://gematik.de/fhir/ISiK/StructureDefinition/ISiKAngehoeriger" konform ist
-    Dann FHIR prüfe die aktuelle Antwort enthält im Body eine gültige ISIK1 Ressource, die zum Profil "https://gematik.de/fhir/ISiK/StructureDefinition/ISiKAngehoeriger" konform ist
-    Und FHIR prüfe die aktuelle Antwort enthält im Knoten '$.body' eine gültige ISIK1 Ressource, die zum Profil "https://gematik.de/fhir/ISiK/StructureDefinition/ISiKAngehoeriger" konform ist
+    Gegeben sei TGR liest folgende .tgr Datei 'src/test/resources/fhir.tgr'
+    Wenn TGR finde die nächste Anfrage mit dem Pfad '/erp/42'
+    Dann FHIR prüfe die aktuelle Anfrage enthält im Body eine gültige ERP Ressource, die zum Profil "https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Bundle|1.1.0" konform ist
+    Und FHIR prüfe die aktuelle Anfrage enthält im Knoten '$.body' eine gültige ERP Ressource, die zum Profil "https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Bundle|1.1.0" konform ist
 
   Szenario: FHIR-Validierung mit FHIRPath
     Gegeben sei TGR liest folgende .tgr Datei 'src/test/resources/fhir.tgr'
@@ -56,10 +53,10 @@ Funktionalität: FHIR Validation Deutsch
     Und in "target/evidences/" exists a file matching "^evidence_FHIR-Validierung_mit_Hilfe_des_Referenz_Validators_und_Custom_Profilen_[0-9].+\.html$" containing all of the following lines:
     """
     FHIR-Validierung mit Hilfe des Referenz Validators und Custom Profilen
-    Dann FHIR pr&uuml;fe die aktuelle Anfrage enth&auml;lt im Body eine g&uuml;ltige ISIK1 Ressource
-    Und FHIR pr&uuml;fe die aktuelle Antwort enth&auml;lt im Body eine g&uuml;ltige ISIK1 Ressource
-    evidence-type-WARN"
-    evidence-type-INFO"
+    Dann FHIR pr&uuml;fe die aktuelle Anfrage enth&auml;lt im Body eine g&uuml;ltige ERP Ressource, die zum Profil &quot;https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Bundle|1.1.0&quot; konform ist
+    Und FHIR pr&uuml;fe die aktuelle Anfrage enth&auml;lt im Knoten '$.body' eine g&uuml;ltige ERP Ressource, die zum Profil &quot;https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Bundle|1.1.0&quot; konform ist
+    evidence-type-INFO
+    evidence-type-INFO
     """
     Und in "target/evidences/" exists no file matching "^evidence_FHIR-Validierung_mit_Hilfe_des_Referenz_Validators_und_Custom_Profilen_[0-9].+\.html$" containing any of the following lines:
     """
@@ -76,3 +73,20 @@ Funktionalität: FHIR Validation Deutsch
     evidence-type-WARN"
     evidence-type-ERROR"
     """
+
+  Szenario: FHIR-Validierung unter Verwendung eines Plugins mit Hilfe des Referenz Validators
+    Gegeben sei TGR liest folgende .tgr Datei 'src/test/resources/fhir-plugins.tgr'
+    Wenn TGR finde die nächste Anfrage mit dem Pfad '/minimal/42'
+    Dann FHIR prüfe die aktuelle Anfrage enthält im Body eine gültige minimal Ressource
+    Und FHIR prüfe die aktuelle Antwort enthält im Body eine gültige minimal Ressource
+    Wenn TGR finde die nächste Anfrage mit dem Pfad '.+'
+    Dann FHIR prüfe die aktuelle Antwort enthält im Knoten '$.body' eine gültige minimal Ressource
+
+
+  Szenario: FHIR-Validierung und Speicherung in eine Variable
+    Gegeben sei TGR liest folgende .tgr Datei 'src/test/resources/fhir.tgr'
+    Wenn TGR finde die nächste Anfrage mit dem Pfad '/erp/42'
+    Dann FHIR prüfe die aktuelle Anfrage erfüllt im Body den FHIRPath '${tiger.my.configurable.fhirpathExpression}'
+    Dann FHIR prüfe die aktuelle Anfrage erfüllt im Body den FHIRPath 'Bundle.entry.resource.author.type.where(value = "Device").exists()'
+    Dann FHIR evaluate FHIRPath 'Bundle.entry.resource.author.type.where(value = "Device").count()' on current response body and store first element as primitive value in variable "test"
+    Dann TGR print variable "test"

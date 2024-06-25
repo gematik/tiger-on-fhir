@@ -16,15 +16,17 @@ limitations under the License.
 
 package de.gematik.test.tiger.glue.fhir;
 
+import de.gematik.test.tiger.common.config.SourceType;
+import de.gematik.test.tiger.common.config.TigerGlobalConfiguration;
 import de.gematik.test.tiger.fhir.validation.fhirpath.FhirPathValidation;
 import de.gematik.test.tiger.fhir.validation.fhirpath.NetTracer;
 import io.cucumber.core.plugin.report.EvidenceRecorderFactory;
 import io.cucumber.java.de.Dann;
 import io.cucumber.java.de.Wenn;
 import io.cucumber.java.en.Then;
-import lombok.RequiredArgsConstructor;
-
 import java.util.Optional;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Glue code for FHIRPath validation.
@@ -33,6 +35,7 @@ import java.util.Optional;
  * if they evaluate as expected.
  */
 @SuppressWarnings("unused")
+@Slf4j
 @RequiredArgsConstructor
 public class FhirPathValidationGlue {
 
@@ -182,5 +185,16 @@ public class FhirPathValidationGlue {
   @Wenn("FHIR die aktuelle Antwort im Knoten {tigerResolvedString} nicht den FHIRPath {tigerResolvedString} erfüllt")
   public void tgrCurrentResponseFailsTheFhirPath(final String rbelPath, final String fhirPath) {
     fhirPathValidation.tgrCurrentResponseFailsTheFhirPath(rbelPath, fhirPath);
+  }
+
+  @Then("FHIR evaluate FHIRPath {tigerResolvedString} on current response body and store first element as primitive value in variable {tigerResolvedString}")
+  @Dann("FHIR prüfe die aktuelle Antwort den FHIRPath {tigerResolvedString} und speichere das erste Ergebnis als primitiven Wert in Variable {tigerResolvedString}")
+  public void fhirEvaluateFHIRPathTigerResolvedStringOnCurrentResponseBodyAndStoreResultInVariableString(
+      final String fhirPath, final String variable) {
+    String value = fhirPathValidation.getFirstElementAsPrimitiveValueForFhirPath(fhirPath);
+    if (value != null) {
+      TigerGlobalConfiguration.putValue(variable, value, SourceType.TEST_CONTEXT);
+      log.info(String.format("Storing '%s' in variable '%s'", value, variable));
+    }
   }
 }

@@ -19,7 +19,6 @@ package de.gematik.test.tiger.fhir.validation.fhirpath;
 import static de.gematik.test.tiger.common.config.TigerGlobalConfiguration.resolvePlaceholders;
 import static org.assertj.core.api.Assertions.fail;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
-
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.support.DefaultProfileValidationSupport;
 import ca.uhn.fhir.parser.IParser;
@@ -385,5 +384,36 @@ public class FhirPathValidation {
     private final SoftAssertions softAsserter;
     private final boolean expectedOutcome;
     private final String errorMessage;
+  }
+
+  public String getFirstElementAsPrimitiveValueForFhirPath(final String fhirPath) {
+    final Optional<String> fhirResource = findElementInCurrentRequest(RBEL_SELECTOR_FOR_BODY);
+
+    if (fhirResource.isEmpty()) {
+      return null;
+    }
+
+    final IBaseResource resource = parseRequestByContentType(fhirResource.get());
+    String msg;
+    try {
+      final List<Base> evaluationResult = fhirPathEngine.evaluate((Base) resource, fhirPath);
+      if (evaluationResult != null && !evaluationResult.isEmpty()) {
+        if (evaluationResult.get(0).isPrimitive()) {
+          return evaluationResult.get(0).primitiveValue();
+        } else {
+          evidenceRecorder.recordEvidence(
+              new Evidence(Type.ERROR, "result is not a primitive type for FHIRPath: " + fhirPath));
+          msg = "result is not a primitive type for FHIRPath: " + fhirPath;
+        }
+      } else {
+        evidenceRecorder.recordEvidence(new Evidence(Type.ERROR, "result is null or empty for FHIRPath: " + fhirPath));
+        msg = "result is null or empty for FHIRPath: " + fhirPath;
+      }
+    } catch (final FHIRException e) {
+      evidenceRecorder.recordEvidence(new Evidence(Type.FATAL, "invalid FHIRPath: " + fhirPath, e));
+      msg = "invalid FHIRPath: " + fhirPath;
+    }
+    fail(msg);
+    return null;
   }
 }
