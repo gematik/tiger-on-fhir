@@ -17,21 +17,21 @@ limitations under the License.
 package de.gematik.test.tiger.fhir.validation.fhirpath;
 
 import de.gematik.rbellogger.data.RbelElement;
-import de.gematik.test.tiger.lib.rbel.RbelMessageValidator;
+import de.gematik.test.tiger.glue.RBelValidatorGlue;
 import java.util.Optional;
 
 /** Simplified access to traced requests and responses. */
 public class NetTracer {
 
-  private static final RbelMessageValidator rbelValidator = RbelMessageValidator.instance;
+  private final RBelValidatorGlue rBelValidatorGlue = new RBelValidatorGlue();
 
   public Optional<String> getCurrentRequestsRawStringByRbelPath(final String rbelPath) {
-    return Optional.ofNullable(rbelValidator.findElementInCurrentRequest(rbelPath))
+    return Optional.ofNullable(rBelValidatorGlue.getRbelValidator().findElementInCurrentRequest(rbelPath))
         .map(RbelElement::getRawStringContent);
   }
 
   public Optional<String> getCurrentResponseRawStringByRbelPath(final String rbelPath) {
-    return Optional.ofNullable(rbelValidator.findElementInCurrentResponse(rbelPath))
+    return Optional.ofNullable(rBelValidatorGlue.getRbelValidator().findElementInCurrentResponse(rbelPath))
         .map(RbelElement::getRawStringContent);
   }
 }

@@ -17,7 +17,6 @@ limitations under the License.
 package de.gematik.test.tiger.fhir.validation.staticv;
 
 import static org.assertj.core.api.Assertions.assertThat;
-
 import ca.uhn.fhir.validation.ResultSeverityEnum;
 import ca.uhn.fhir.validation.SingleValidationMessage;
 import de.gematik.rbellogger.data.RbelElement;
@@ -25,14 +24,13 @@ import de.gematik.refv.commons.validation.ValidationMessagesFilter;
 import de.gematik.refv.commons.validation.ValidationModule;
 import de.gematik.refv.commons.validation.ValidationOptions;
 import de.gematik.refv.commons.validation.ValidationResult;
-import de.gematik.test.tiger.lib.rbel.RbelMessageValidator;
+import de.gematik.test.tiger.glue.RBelValidatorGlue;
 import io.cucumber.core.plugin.report.Evidence;
 import io.cucumber.core.plugin.report.Evidence.Type;
 import io.cucumber.core.plugin.report.EvidenceRecorder;
 import io.cucumber.core.plugin.report.EvidenceRecorderFactory;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -44,9 +42,17 @@ public class StaticFhirValidation {
 
   private static final String BODY_RBEL_PATH = "$.body";
 
-  private static final RbelMessageValidator rbelValidator = RbelMessageValidator.instance;
-
   private final EvidenceRecorder evidenceRecorder = EvidenceRecorderFactory.getEvidenceRecorder();
+
+  private final RBelValidatorGlue rBelValidatorGlue;
+
+  public StaticFhirValidation() {
+    rBelValidatorGlue = new RBelValidatorGlue();
+  }
+
+  public StaticFhirValidation(RBelValidatorGlue rBelValidatorGlue) {
+    this.rBelValidatorGlue = rBelValidatorGlue;
+  }
 
   public void tgrCurrentRequestBodyAtIsValidFHIRResourceOfType(
           final ValidationModule validationModule) {
@@ -78,7 +84,8 @@ public class StaticFhirValidation {
           ValidationOptions validationOptions) {
     final var validationResult =
             validateRbelElementAt(
-                    rbelValidator.findElementInCurrentRequest(rbelPath), validationModule, validationOptions);
+                rBelValidatorGlue.getRbelValidator().findElementInCurrentRequest(rbelPath), validationModule,
+                validationOptions);
 
     final String validationMessage = getCombinedValidationMessages(validationResult);
 
@@ -143,7 +150,7 @@ public class StaticFhirValidation {
           ValidationOptions validationOptions) {
     final var validationResult =
             validateRbelElementAt(
-                    rbelValidator.findElementInCurrentResponse(rbelPath),
+                rBelValidatorGlue.getRbelValidator().findElementInCurrentResponse(rbelPath),
                     validationModule,
                     validationOptions);
 
