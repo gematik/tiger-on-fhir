@@ -18,7 +18,13 @@ package de.gematik.test.tiger.glue.fhir;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.mockito.Mockito.mock;
 import de.gematik.refv.commons.validation.ValidationModule;
+import de.gematik.test.tiger.fhir.validation.staticv.StaticFhirValidation;
+import de.gematik.test.tiger.glue.RBelValidatorGlue;
+import de.gematik.test.tiger.lib.rbel.RbelMessageValidator;
+import de.gematik.test.tiger.proxy.TigerProxy;
+import de.gematik.test.tiger.testenvmgr.TigerTestEnvMgr;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -26,10 +32,13 @@ import org.junit.jupiter.api.Test;
 class StaticFhirValidationGlueTest {
 
     private StaticFhirValidationGlue staticFhirValidationGlue;
-
+    private final TigerTestEnvMgr tigerTestEnvMgr = mock(TigerTestEnvMgr.class);
+    private final TigerProxy tigerProxy = mock(TigerProxy.class);
     @BeforeEach
     void setUp() {
-        staticFhirValidationGlue = new StaticFhirValidationGlue();
+        staticFhirValidationGlue = new StaticFhirValidationGlue(
+            new StaticFhirValidation(new RBelValidatorGlue(
+                new RbelMessageValidator(tigerTestEnvMgr, tigerProxy))));
     }
 
     @Test
