@@ -6,8 +6,11 @@ Feature: FHIR Validation English
   Scenario: FHIR-Validation with the help of the reference-validators
     Given TGR reads the following .tgr file 'src/test/resources/fhir.tgr'
     When TGR find request to path '/erp/42'
+    And FHIR current response body evaluates the FHIRPath 'true' with error message 'blabla'
+    And FHIR current response at '$.body' evaluates the FHIRPath 'true'
     Then FHIR current request body is a valid ERP resource
     Then FHIR current response body is a valid ERP resource
+    Then FHIR current response body is a valid ERP resource and conforms to profile "https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Bundle|1.1.0"
     When TGR find next request to path '.+'
     Then FHIR current request at '$.body' is a valid ERP resource
 
@@ -16,15 +19,20 @@ Feature: FHIR Validation English
     When TGR find request to path '/erp/42'
     Then FHIR current request body is a valid ERP resource and conforms to profile "https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Bundle|1.1.0"
     Then FHIR current request at '$.body' is a valid ERP resource and conforms to profile "https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Bundle|1.1.0"
+    Then FHIR current request at '$.body' fails the FHIRPath 'Bundle.entry.resource.author.type.where(value != "Practitioner" and value != "Device").exists()'
+    Then FHIR current request at '$.body' evaluates the FHIRPath '${tiger.my.configurable.fhirpathExpression}'
+    Then FHIR current request at '$.body' evaluates the FHIRPath '${tiger.my.configurable.fhirpathExpression}' with error message 'Error'
 
   Scenario: FHIR-Validation with FHIRPath
     Given TGR reads the following .tgr file 'src/test/resources/fhir.tgr'
     When TGR find request to path '/erp/42'
     When FHIR current request body evaluates the FHIRPath '${tiger.my.configurable.fhirpathExpression}'
+    When FHIR current request body evaluates the FHIRPath '${tiger.my.configurable.fhirpathExpression}' with error message 'Error'
     When FHIR current request body evaluates the FHIRPath 'Bundle.entry.resource.author.type.where(value = "${tiger.my.configurable.author.type.valid}").exists()'
     When FHIR current response body evaluates the FHIRPath 'Bundle.entry.resource.author.type.where(value != "${tiger.my.configurable.author.type.invalid}").exists()'
     When FHIR current request body fails the FHIRPath 'Bundle.entry.resource.author.type.where(value != "Practitioner" and value != "Device").exists()'
     When FHIR current response body fails the FHIRPath 'Bundle.entry.resource.author.where(type.value.startsWith("D")).type = "${tiger.my.configurable.author.type.invalid}"'
+    When FHIR current response at '$.body' fails the FHIRPath 'Bundle.entry.resource.author.where(type.value.startsWith("D")).type = "${tiger.my.configurable.author.type.invalid}"'
     When FHIR current request body evaluates the FHIRPaths:
     """
       Bundle.entry.resource.author.type.where(value != "Practitioner" and value != "Device").exists().not()
@@ -34,6 +42,11 @@ Feature: FHIR Validation English
     """
       (Bundle.entry.count() < 7 and Bundle.entry.resource.author.count() > 2).not()
       Bundle.entry.resource.author.where(type.value.matches("D.*i.+")).type != "Dinosaur"
+    """
+    When FHIR current request at '$.body' evaluates the FHIRPaths:
+    """
+      Bundle.entry.resource.author.type.where(value != "Practitioner" and value != "Device").exists().not()
+      Bundle.entry.resource.author.type.where(value != "Device") != "${tiger.my.configurable.author.type.invalid}"
     """
 
   Scenario: Report of previous scenarios should exist and contain its Details

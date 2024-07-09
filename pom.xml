@@ -6,7 +6,7 @@
 
     <groupId>de.gematik.test.tiger</groupId>
     <artifactId>tiger-on-fhir</artifactId>
-    <version>1.2.4</version>
+    <version>1.2.5</version>
     <packaging>jar</packaging>
     <description>tiger-on-fhir</description>
     <url>https://github.com/gematik/tiger-on-fhir</url>
@@ -65,8 +65,8 @@
         <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
         <sonar.language>java</sonar.language>
 
-        <tiger.version>3.1.2</tiger.version>
-        <junit5.version>5.10.2</junit5.version>
+        <tiger.version>3.1.3</tiger.version>
+        <junit5.version>5.10.3</junit5.version>
         <refv.version>2.3.0</refv.version>
         <javax.version>1.3.2</javax.version>
         <mockito.version>5.12.0</mockito.version>
@@ -93,7 +93,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.32</version>
+            <version>1.18.34</version>
             <scope>provided</scope>
         </dependency>
 
@@ -199,7 +199,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>3.3.0</version>
+                <version>3.3.1</version>
                 <executions>
                     <execution>
                         <id>attach-sources</id>
@@ -212,7 +212,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.2.5</version>
+                <version>3.3.0</version>
                 <configuration>
                     <argLine>
                         ${argLine}
@@ -228,7 +228,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <version>3.2.5</version>
+                <version>3.3.0</version>
                 <configuration>
                     <!--
                         WorkflowUI needs this to allow it to block execution of maven,
@@ -351,7 +351,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
-                        <version>3.2.2</version>
+                        <version>3.2.4</version>
                         <executions>
                             <execution>
                                 <id>sign-artifacts</id>

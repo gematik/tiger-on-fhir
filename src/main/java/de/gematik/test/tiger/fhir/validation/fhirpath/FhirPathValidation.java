@@ -387,13 +387,13 @@ public class FhirPathValidation {
   }
 
   public String getFirstElementAsPrimitiveValueForFhirPath(final String fhirPath) {
-    final Optional<String> fhirResource = findElementInCurrentRequest(RBEL_SELECTOR_FOR_BODY);
+    final Optional<String> fhirResource = findElementInCurrentResponse(RBEL_SELECTOR_FOR_BODY);
 
     if (fhirResource.isEmpty()) {
       return null;
     }
 
-    final IBaseResource resource = parseRequestByContentType(fhirResource.get());
+    final IBaseResource resource = parseResponseByContentType(fhirResource.get());
     String msg;
     try {
       final List<Base> evaluationResult = fhirPathEngine.evaluate((Base) resource, fhirPath);
