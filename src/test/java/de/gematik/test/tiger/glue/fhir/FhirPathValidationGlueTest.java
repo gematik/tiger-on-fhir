@@ -667,9 +667,9 @@ class FhirPathValidationGlueTest {
   @SneakyThrows
   void fhirEvaluateFHIRPathTigerResolvedStringOnCurrentResponseBodyAndStoreResultInVariableString_ShouldEvaluateOneValidFhirPathExpressions() {
     // Arrange
-    when(netTracer.getCurrentRequestsRawStringByRbelPath(FhirPathValidation.RBEL_SELECTOR_FOR_BODY))
+    when(netTracer.getCurrentResponseRawStringByRbelPath(FhirPathValidation.RBEL_SELECTOR_FOR_BODY))
         .thenReturn(Optional.of(getFhirRessourceAsJson()));
-    when(netTracer.getCurrentRequestsRawStringByRbelPath(FhirPathValidation.RBEL_SELECTOR_FOR_CONTENT_TYPE_HEADER))
+    when(netTracer.getCurrentResponseRawStringByRbelPath(FhirPathValidation.RBEL_SELECTOR_FOR_CONTENT_TYPE_HEADER))
         .thenReturn(Optional.of("application/json"));
     final String fhirPath = getTruthyResultFhirPath();
 
@@ -686,9 +686,9 @@ class FhirPathValidationGlueTest {
   @SneakyThrows
   void fhirEvaluateFHIRPathTigerResolvedStringOnCurrentResponseBodyAndStoreResultInVariableString_ShouldEvaluateOneIntValidFhirPathExpressions() {
     // Arrange
-    when(netTracer.getCurrentRequestsRawStringByRbelPath(FhirPathValidation.RBEL_SELECTOR_FOR_BODY))
+    when(netTracer.getCurrentResponseRawStringByRbelPath(FhirPathValidation.RBEL_SELECTOR_FOR_BODY))
         .thenReturn(Optional.of(getFhirRessourceAsJson()));
-    when(netTracer.getCurrentRequestsRawStringByRbelPath(FhirPathValidation.RBEL_SELECTOR_FOR_CONTENT_TYPE_HEADER))
+    when(netTracer.getCurrentResponseRawStringByRbelPath(FhirPathValidation.RBEL_SELECTOR_FOR_CONTENT_TYPE_HEADER))
         .thenReturn(Optional.of("application/json"));
     final String fhirPath = getCountResultFhirPath();
 
@@ -705,9 +705,9 @@ class FhirPathValidationGlueTest {
   @SneakyThrows
   void fhirEvaluateFHIRPathTigerResolvedStringOnCurrentResponseBodyAndStoreResultInVariableString_ShouldEvaluateOneDateValidFhirPathExpressions() {
     // Arrange
-    when(netTracer.getCurrentRequestsRawStringByRbelPath(FhirPathValidation.RBEL_SELECTOR_FOR_BODY))
+    when(netTracer.getCurrentResponseRawStringByRbelPath(FhirPathValidation.RBEL_SELECTOR_FOR_BODY))
         .thenReturn(Optional.of(getFhirRessourceAsJson()));
-    when(netTracer.getCurrentRequestsRawStringByRbelPath(FhirPathValidation.RBEL_SELECTOR_FOR_CONTENT_TYPE_HEADER))
+    when(netTracer.getCurrentResponseRawStringByRbelPath(FhirPathValidation.RBEL_SELECTOR_FOR_CONTENT_TYPE_HEADER))
         .thenReturn(Optional.of("application/json"));
     final String fhirPath = getDateResultFhirPath();
 
@@ -725,9 +725,9 @@ class FhirPathValidationGlueTest {
   @SneakyThrows
   void fhirEvaluateFHIRPathTigerResolvedStringOnCurrentResponseBodyAndStoreResultInVariableString_ShouldEvaluateTwoResultsValidFhirPathExpressions() {
     // Arrange
-    when(netTracer.getCurrentRequestsRawStringByRbelPath(FhirPathValidation.RBEL_SELECTOR_FOR_BODY))
+    when(netTracer.getCurrentResponseRawStringByRbelPath(FhirPathValidation.RBEL_SELECTOR_FOR_BODY))
         .thenReturn(Optional.of(getFhirRessourceAsJson()));
-    when(netTracer.getCurrentRequestsRawStringByRbelPath(FhirPathValidation.RBEL_SELECTOR_FOR_CONTENT_TYPE_HEADER))
+    when(netTracer.getCurrentResponseRawStringByRbelPath(FhirPathValidation.RBEL_SELECTOR_FOR_CONTENT_TYPE_HEADER))
         .thenReturn(Optional.of("application/json"));
     final String fhirPath = getMoreResultFhirPath();
 
@@ -744,9 +744,9 @@ class FhirPathValidationGlueTest {
   @SneakyThrows
   void fhirEvaluateFHIRPathTigerResolvedStringOnCurrentResponseBodyAndStoreResultInVariableString_ShouldEvaluateComplexFhirPathExpressions() {
     // Arrange
-    when(netTracer.getCurrentRequestsRawStringByRbelPath(FhirPathValidation.RBEL_SELECTOR_FOR_BODY))
+    when(netTracer.getCurrentResponseRawStringByRbelPath(FhirPathValidation.RBEL_SELECTOR_FOR_BODY))
         .thenReturn(Optional.of(getFhirRessourceAsJson()));
-    when(netTracer.getCurrentRequestsRawStringByRbelPath(FhirPathValidation.RBEL_SELECTOR_FOR_CONTENT_TYPE_HEADER))
+    when(netTracer.getCurrentResponseRawStringByRbelPath(FhirPathValidation.RBEL_SELECTOR_FOR_CONTENT_TYPE_HEADER))
         .thenReturn(Optional.of("application/json"));
     final String fhirPath = getComplexResultFhirPath();
 
@@ -770,9 +770,9 @@ class FhirPathValidationGlueTest {
   @SneakyThrows
   void fhirEvaluateFHIRPathTigerResolvedStringOnCurrentResponseBodyAndStoreResultInVariableString_ShouldFailWithInvalidFhirPathExpressions() {
     // Arrange
-    when(netTracer.getCurrentRequestsRawStringByRbelPath(FhirPathValidation.RBEL_SELECTOR_FOR_BODY))
+    when(netTracer.getCurrentResponseRawStringByRbelPath(FhirPathValidation.RBEL_SELECTOR_FOR_BODY))
         .thenReturn(Optional.of(getFhirRessourceAsJson()));
-    when(netTracer.getCurrentRequestsRawStringByRbelPath(FhirPathValidation.RBEL_SELECTOR_FOR_CONTENT_TYPE_HEADER))
+    when(netTracer.getCurrentResponseRawStringByRbelPath(FhirPathValidation.RBEL_SELECTOR_FOR_CONTENT_TYPE_HEADER))
         .thenReturn(Optional.of("application/json"));
     final String fhirPath = getInvalidFhirPath();
 
@@ -795,9 +795,9 @@ class FhirPathValidationGlueTest {
   @SneakyThrows
   void fhirEvaluateFHIRPathTigerResolvedStringOnCurrentResponseBodyAndStoreResultInVariableString_ShouldFailWithEmptyFhirPathExpressions() {
     // Arrange
-    when(netTracer.getCurrentRequestsRawStringByRbelPath(FhirPathValidation.RBEL_SELECTOR_FOR_BODY))
+    when(netTracer.getCurrentResponseRawStringByRbelPath(FhirPathValidation.RBEL_SELECTOR_FOR_BODY))
         .thenReturn(Optional.of(getFhirRessourceAsJson()));
-    when(netTracer.getCurrentRequestsRawStringByRbelPath(FhirPathValidation.RBEL_SELECTOR_FOR_CONTENT_TYPE_HEADER))
+    when(netTracer.getCurrentResponseRawStringByRbelPath(FhirPathValidation.RBEL_SELECTOR_FOR_CONTENT_TYPE_HEADER))
         .thenReturn(Optional.of("application/json"));
     final String fhirPath = getEmptyResultFhirPath();
 

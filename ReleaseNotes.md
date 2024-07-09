@@ -1,5 +1,10 @@
 # Changelog tiger-on-fhir
 
+# Release 1.2.5
+
+* TGRFHIR-21: Evaluating the FhirPath and storing the value in a variable did not work for responses
+* TGRFHIR-22: Cucumber-Step matches to several GlueCode methods
+
 # Release 1.2.2
 * Added support for reference validator plugins
 * TGRFHIR-16: new test step for validating a fhirpath and storing the result into a variable added
