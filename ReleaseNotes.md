@@ -1,5 +1,11 @@
 # Changelog tiger-on-fhir
 
+# Release 1.2.6
+
+* upgraded ref validator to v2.5
+* upgraded tiger to v3.3.0
+* upgraded maven plugins to latest versions
+
 # Release 1.2.5
 
 * TGRFHIR-21: Evaluating the FhirPath and storing the value in a variable did not work for responses
