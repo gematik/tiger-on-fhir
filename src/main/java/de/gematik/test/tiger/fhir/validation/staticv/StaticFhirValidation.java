@@ -16,7 +16,6 @@ limitations under the License.
 
 package de.gematik.test.tiger.fhir.validation.staticv;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import ca.uhn.fhir.validation.ResultSeverityEnum;
 import ca.uhn.fhir.validation.SingleValidationMessage;
 import de.gematik.rbellogger.data.RbelElement;
@@ -29,9 +28,12 @@ import io.cucumber.core.plugin.report.Evidence;
 import io.cucumber.core.plugin.report.Evidence.Type;
 import io.cucumber.core.plugin.report.EvidenceRecorder;
 import io.cucumber.core.plugin.report.EvidenceRecorderFactory;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 import java.util.stream.Collectors;
-import org.jetbrains.annotations.NotNull;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Glue code for Static-FHIR validation.

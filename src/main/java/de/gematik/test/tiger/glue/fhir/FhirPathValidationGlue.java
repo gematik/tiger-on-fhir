@@ -16,7 +16,7 @@ limitations under the License.
 
 package de.gematik.test.tiger.glue.fhir;
 
-import de.gematik.test.tiger.common.config.SourceType;
+import de.gematik.test.tiger.common.config.ConfigurationValuePrecedence;
 import de.gematik.test.tiger.common.config.TigerGlobalConfiguration;
 import de.gematik.test.tiger.fhir.validation.fhirpath.FhirPathValidation;
 import de.gematik.test.tiger.fhir.validation.fhirpath.NetTracer;
@@ -24,9 +24,10 @@ import io.cucumber.core.plugin.report.EvidenceRecorderFactory;
 import io.cucumber.java.de.Dann;
 import io.cucumber.java.de.Wenn;
 import io.cucumber.java.en.Then;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.Optional;
 
 /**
  * Glue code for FHIRPath validation.
@@ -197,7 +198,7 @@ public class FhirPathValidationGlue {
       final String fhirPath, final String variable) {
     String value = fhirPathValidation.getFirstElementAsPrimitiveValueForFhirPath(fhirPath);
     if (value != null) {
-      TigerGlobalConfiguration.putValue(variable, value, SourceType.TEST_CONTEXT);
+      TigerGlobalConfiguration.putValue(variable, value, ConfigurationValuePrecedence.TEST_CONTEXT);
       log.info(String.format("Storing '%s' in variable '%s'", value, variable));
     }
   }
