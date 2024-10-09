@@ -1,5 +1,9 @@
 # Changelog tiger-on-fhir
 
+# Release 1.2.7
+
+* TGRFHIR-26: dependency update (ref validator to v2.6, tiger to v3.4.0)
+
 # Release 1.2.6
 
 * upgraded ref validator to v2.5
