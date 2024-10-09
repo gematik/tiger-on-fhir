@@ -6,7 +6,7 @@
 
     <groupId>de.gematik.test.tiger</groupId>
     <artifactId>tiger-on-fhir</artifactId>
-    <version>1.2.6</version>
+    <version>1.2.7</version>
     <packaging>jar</packaging>
     <description>tiger-on-fhir</description>
     <url>https://github.com/gematik/tiger-on-fhir</url>
@@ -65,12 +65,12 @@
         <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
         <sonar.language>java</sonar.language>
 
-        <tiger.version>3.3.0</tiger.version>
+        <tiger.version>3.4.2</tiger.version>
         <junit5.version>5.10.3</junit5.version>
-        <refv.version>2.5.0</refv.version>
+        <refv.version>2.6.0</refv.version>
         <javax.version>1.3.2</javax.version>
-        <mockito.version>5.13.0</mockito.version>
-        <version.logback>1.5.7</version.logback>
+        <mockito.version>5.14.1</mockito.version>
+        <version.logback>1.5.8</version.logback>
         <spotless-maven-plugin.version>2.43.0</spotless-maven-plugin.version>
         <spotless.google-java-format.version>1.18.1</spotless.google-java-format.version>
     </properties>
@@ -281,7 +281,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.10.0</version>
+                <version>3.10.1</version>
                 <configuration>
                     <doclint>none</doclint>
                 </configuration>
@@ -351,7 +351,7 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
-                        <version>3.2.5</version>
+                        <version>3.2.7</version>
                         <executions>
                             <execution>
                                 <id>sign-artifacts</id>
