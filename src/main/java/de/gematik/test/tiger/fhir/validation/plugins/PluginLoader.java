@@ -16,7 +16,6 @@ limitations under the License.
 
 package de.gematik.test.tiger.fhir.validation.plugins;
 
-
 import de.gematik.refv.Plugin;
 import java.io.File;
 import java.util.Arrays;
@@ -31,42 +30,54 @@ import lombok.extern.slf4j.Slf4j;
 @NoArgsConstructor
 @Slf4j
 public class PluginLoader {
-    private final Map<String, Plugin> plugins = new HashMap<>();
 
-    public Map<String, Plugin> loadPlugins(String pluginPath) throws IllegalArgumentException {
-        plugins.clear();
+  private final Map<String, Plugin> plugins = new HashMap<>();
 
-        final File pluginFolder = new File(pluginPath);
+  public Map<String, Plugin> loadPlugins(String pluginPath) throws IllegalArgumentException {
+    plugins.clear();
 
-        if (!pluginFolder.exists()) {
-            throw new IllegalArgumentException(String.format("Plugins directory is missing. No such file or directory: %s", pluginFolder.getPath()));
-        }
+    final File pluginFolder = new File(pluginPath);
 
-        var zipFiles = Arrays.stream(Objects.requireNonNull(pluginFolder.list((dir, name) -> name.endsWith(".zip")))).map(fileName ->
-                getZipFile(pluginPath, fileName)).toList();
-
-        if (zipFiles.isEmpty()) {
-            log.info("No plugins found in: {}", pluginFolder.getPath());
-            return new HashMap<>();
-        }
-
-        for (var zipFile : zipFiles) {
-            var configFile = zipFile.stream().filter(e -> e.getName().endsWith("config.yaml")).findFirst();
-            if (configFile.isEmpty())
-                throw new IllegalArgumentException("No config file found for plugin " + zipFile.getName());
-
-            Plugin plugin = Plugin.createFromZipFile(zipFile);
-            if(plugins.containsKey(plugin.getId())) {
-                log.warn("Duplicate plugin id found: '{}'. Change the id of the plugin in the plugin configuration file and try again", plugin.getId());
-            }
-            else
-                plugins.put(plugin.getId(), plugin);
-        }
-        return plugins;
+    if (!pluginFolder.exists()) {
+      throw new IllegalArgumentException(
+          String.format(
+              "Plugins directory is missing. No such file or directory: %s",
+              pluginFolder.getPath()));
     }
 
-    @SneakyThrows
-    private static ZipFile getZipFile(String pluginPath, String fileName) {
-        return new ZipFile(pluginPath + File.separator + fileName);
+    var zipFiles =
+        Arrays.stream(
+                Objects.requireNonNull(pluginFolder.list((dir, name) -> name.endsWith(".zip"))))
+            .map(fileName -> getZipFile(pluginPath, fileName))
+            .toList();
+
+    if (zipFiles.isEmpty()) {
+      log.info("No plugins found in: {}", pluginFolder.getPath());
+      return new HashMap<>();
     }
+
+    for (var zipFile : zipFiles) {
+      var configFile =
+          zipFile.stream().filter(e -> e.getName().endsWith("config.yaml")).findFirst();
+      if (configFile.isEmpty()) {
+        throw new IllegalArgumentException("No config file found for plugin " + zipFile.getName());
+      }
+
+      Plugin plugin = Plugin.createFromZipFile(zipFile);
+      if (plugins.containsKey(plugin.getId())) {
+        log.warn(
+            "Duplicate plugin id found: '{}'. Change the id of the plugin in the plugin"
+                + " configuration file and try again",
+            plugin.getId());
+      } else {
+        plugins.put(plugin.getId(), plugin);
+      }
+    }
+    return plugins;
+  }
+
+  @SneakyThrows
+  private static ZipFile getZipFile(String pluginPath, String fileName) {
+    return new ZipFile(pluginPath + File.separator + fileName);
+  }
 }

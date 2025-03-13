@@ -27,8 +27,6 @@ import io.cucumber.java.en.Then;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.Optional;
-
 /**
  * Glue code for FHIRPath validation.
  *
@@ -54,40 +52,41 @@ public class FhirPathValidationGlue {
         TigerGlobalConfiguration.resolvePlaceholders(fhirPath));
   }
 
-  @Then("FHIR current request body evaluates the FHIRPath {tigerResolvedString} with error message {tigerResolvedString}")
-  @Dann(
-      "FHIR prüfe die aktuelle Anfrage erfüllt im Body den FHIRPath {tigerResolvedString} mit der Fehlermeldung"
+  @Then(
+      "FHIR current request body evaluates the FHIRPath {tigerResolvedString} with error message"
           + " {tigerResolvedString}")
+  @Dann(
+      "FHIR prüfe die aktuelle Anfrage erfüllt im Body den FHIRPath {tigerResolvedString} mit der"
+          + " Fehlermeldung {tigerResolvedString}")
   @Wenn(
-      "FHIR die aktuelle Anfrage im Body den FHIRPath {tigerResolvedString} mit der Fehlermeldung {tigerResolvedString}"
-          + " erfüllt")
+      "FHIR die aktuelle Anfrage im Body den FHIRPath {tigerResolvedString} mit der Fehlermeldung"
+          + " {tigerResolvedString} erfüllt")
   public void tgrCurrentRequestBodyEvaluatesTheFhirPath(
       final String fhirPath, final String errorMessage) {
-    fhirPathValidation.tgrCurrentRequestBodyEvaluatesTheFhirPath(
-        fhirPath, Optional.of(errorMessage));
+    fhirPathValidation.tgrCurrentRequestBodyEvaluatesTheFhirPath(fhirPath, errorMessage);
   }
 
   @Then("FHIR current request at {string} evaluates the FHIRPath {string}")
   @Dann("FHIR prüfe aktuelle Anfrage im Knoten {string} erfüllt den FHIRPath {string}")
   @Wenn("FHIR die aktuelle Anfrage im Knoten {string} den FHIRPath {string} erfüllt")
   public void tgrCurrentRequestEvaluatesTheFhirPath(final String rbelPath, final String fhirPath) {
-    fhirPathValidation.tgrCurrentRequestEvaluatesTheFhirPath(TigerGlobalConfiguration.resolvePlaceholders(rbelPath),
+    fhirPathValidation.tgrCurrentRequestEvaluatesTheFhirPath(
+        TigerGlobalConfiguration.resolvePlaceholders(rbelPath),
         TigerGlobalConfiguration.resolvePlaceholders(fhirPath));
   }
 
   @Then(
-      "FHIR current request at {tigerResolvedString} evaluates the FHIRPath {tigerResolvedString} with error message"
-          + " {tigerResolvedString}")
+      "FHIR current request at {tigerResolvedString} evaluates the FHIRPath {tigerResolvedString}"
+          + " with error message {tigerResolvedString}")
   @Dann(
-      "FHIR prüfe die aktuelle Anfrage erfüllt im Knoten {tigerResolvedString} den FHIRPath {tigerResolvedString} mit der"
-          + " Fehlermeldung {tigerResolvedString}")
+      "FHIR prüfe die aktuelle Anfrage erfüllt im Knoten {tigerResolvedString} den FHIRPath"
+          + " {tigerResolvedString} mit der Fehlermeldung {tigerResolvedString}")
   @Wenn(
-      "FHIR die aktuelle Anfrage im Knoten {tigerResolvedString} den FHIRPath {tigerResolvedString} mit der Fehlermeldung"
-          + " {tigerResolvedString} erfüllt")
+      "FHIR die aktuelle Anfrage im Knoten {tigerResolvedString} den FHIRPath {tigerResolvedString}"
+          + " mit der Fehlermeldung {tigerResolvedString} erfüllt")
   public void tgrCurrentRequestEvaluatesTheFhirPath(
       final String rbelPath, final String fhirPath, final String errorMessage) {
-    fhirPathValidation.tgrCurrentRequestEvaluatesTheFhirPath(
-        rbelPath, fhirPath, Optional.of(errorMessage));
+    fhirPathValidation.tgrCurrentRequestEvaluatesTheFhirPath(rbelPath, fhirPath, errorMessage);
   }
 
   @Then("FHIR current request body evaluates the FHIRPaths:")
@@ -98,7 +97,9 @@ public class FhirPathValidationGlue {
   }
 
   @Then("FHIR current request at {tigerResolvedString} evaluates the FHIRPaths:")
-  @Dann("FHIR prüfe die aktuelle Anfrage erfüllt im Knoten {tigerResolvedString} die FHIRPath Ausdrücke:")
+  @Dann(
+      "FHIR prüfe die aktuelle Anfrage erfüllt im Knoten {tigerResolvedString} die FHIRPath"
+          + " Ausdrücke:")
   @Wenn("FHIR die aktuelle Anfrage im Knoten {tigerResolvedString} die FHIRPath Ausdrücke erfüllt:")
   public void tgrCurrentRequestEvaluatesTheFhirPaths(
       final String rbelPath, final String fhirPaths) {
@@ -113,40 +114,41 @@ public class FhirPathValidationGlue {
         TigerGlobalConfiguration.resolvePlaceholders(fhirPath));
   }
 
-  @Then("FHIR current response body evaluates the FHIRPath {tigerResolvedString} with error message {tigerResolvedString}")
-  @Dann(
-      "FHIR prüfe die aktuelle Antwort erfüllt im Body den FHIRPath {tigerResolvedString} mit der Fehlermeldung"
+  @Then(
+      "FHIR current response body evaluates the FHIRPath {tigerResolvedString} with error message"
           + " {tigerResolvedString}")
+  @Dann(
+      "FHIR prüfe die aktuelle Antwort erfüllt im Body den FHIRPath {tigerResolvedString} mit der"
+          + " Fehlermeldung {tigerResolvedString}")
   @Wenn(
-      "FHIR die aktuelle Antwort im Body den FHIRPath {tigerResolvedString} mit der Fehlermeldung {tigerResolvedString}"
-          + " erfüllt")
+      "FHIR die aktuelle Antwort im Body den FHIRPath {tigerResolvedString} mit der Fehlermeldung"
+          + " {tigerResolvedString} erfüllt")
   public void tgrCurrentResponseBodyEvaluatesTheFhirPath(
       final String fhirPath, final String errorMessage) {
-    fhirPathValidation.tgrCurrentResponseBodyEvaluatesTheFhirPath(
-        fhirPath, Optional.of(errorMessage));
+    fhirPathValidation.tgrCurrentResponseBodyEvaluatesTheFhirPath(fhirPath, errorMessage);
   }
 
   @Then("FHIR current response at {string} evaluates the FHIRPath {string}")
   @Dann("FHIR prüfe die aktuelle Antwort erfüllt im Knoten {string} den FHIRPath {string}")
   @Wenn("FHIR die aktuelle Antwort im Knoten {string} den FHIRPath {string} erfüllt")
   public void tgrCurrentResponseEvaluatesTheFhirPath(final String rbelPath, final String fhirPath) {
-    fhirPathValidation.tgrCurrentResponseEvaluatesTheFhirPath(TigerGlobalConfiguration.resolvePlaceholders(rbelPath),
+    fhirPathValidation.tgrCurrentResponseEvaluatesTheFhirPath(
+        TigerGlobalConfiguration.resolvePlaceholders(rbelPath),
         TigerGlobalConfiguration.resolvePlaceholders(fhirPath));
   }
 
   @Then(
-      "FHIR current response at {tigerResolvedString} evaluates the FHIRPath {tigerResolvedString} with error message"
-          + " {tigerResolvedString}")
+      "FHIR current response at {tigerResolvedString} evaluates the FHIRPath {tigerResolvedString}"
+          + " with error message {tigerResolvedString}")
   @Dann(
-      "FHIR prüfe die aktuelle Antwort erfüllt im Knoten {tigerResolvedString} den FHIRPath {tigerResolvedString} mit der"
-          + " Fehlermeldung {tigerResolvedString}")
+      "FHIR prüfe die aktuelle Antwort erfüllt im Knoten {tigerResolvedString} den FHIRPath"
+          + " {tigerResolvedString} mit der Fehlermeldung {tigerResolvedString}")
   @Wenn(
-      "FHIR die aktuelle Antwort im Knoten {tigerResolvedString} den FHIRPath {tigerResolvedString} mit der Fehlermeldung"
-          + " {tigerResolvedString} erfüllt")
+      "FHIR die aktuelle Antwort im Knoten {tigerResolvedString} den FHIRPath {tigerResolvedString}"
+          + " mit der Fehlermeldung {tigerResolvedString} erfüllt")
   public void tgrCurrentResponseEvaluatesTheFhirPath(
       final String rbelPath, final String fhirPath, final String errorMessage) {
-    fhirPathValidation.tgrCurrentResponseEvaluatesTheFhirPath(
-        rbelPath, fhirPath, Optional.of(errorMessage));
+    fhirPathValidation.tgrCurrentResponseEvaluatesTheFhirPath(rbelPath, fhirPath, errorMessage);
   }
 
   @Then("FHIR current response body evaluates the FHIRPaths:")
@@ -157,7 +159,9 @@ public class FhirPathValidationGlue {
   }
 
   @Then("FHIR current response at {tigerResolvedString} evaluates the FHIRPaths:")
-  @Dann("FHIR prüfe die aktuelle Antwort erfüllt im Knoten {tigerResolvedString} die FHIRPath Ausdrücke:")
+  @Dann(
+      "FHIR prüfe die aktuelle Antwort erfüllt im Knoten {tigerResolvedString} die FHIRPath"
+          + " Ausdrücke:")
   @Wenn("FHIR die aktuelle Antwort im Knoten {tigerResolvedString} die FHIRPath Ausdrücke erfüllt:")
   public void tgrCurrentResponseEvaluatesTheFhirPaths(
       final String rbelPath, final String fhirPaths) {
@@ -172,8 +176,12 @@ public class FhirPathValidationGlue {
   }
 
   @Then("FHIR current request at {tigerResolvedString} fails the FHIRPath {tigerResolvedString}")
-  @Dann("FHIR prüfe die aktuelle Anfrage erfüllt im Knoten {tigerResolvedString} nicht den FHIRPath {tigerResolvedString}")
-  @Wenn("FHIR die aktuelle Anfrage im Knoten {tigerResolvedString} nicht den FHIRPath {tigerResolvedString} erfüllt")
+  @Dann(
+      "FHIR prüfe die aktuelle Anfrage erfüllt im Knoten {tigerResolvedString} nicht den FHIRPath"
+          + " {tigerResolvedString}")
+  @Wenn(
+      "FHIR die aktuelle Anfrage im Knoten {tigerResolvedString} nicht den FHIRPath"
+          + " {tigerResolvedString} erfüllt")
   public void tgrCurrentRequestFailsTheFhirPath(final String rbelPath, final String fhirPath) {
     fhirPathValidation.tgrCurrentRequestFailsTheFhirPath(rbelPath, fhirPath);
   }
@@ -186,16 +194,25 @@ public class FhirPathValidationGlue {
   }
 
   @Then("FHIR current response at {tigerResolvedString} fails the FHIRPath {tigerResolvedString}")
-  @Dann("FHIR prüfe die aktuelle Antwort erfüllt im Knoten {tigerResolvedString} nicht den FHIRPath {tigerResolvedString}")
-  @Wenn("FHIR die aktuelle Antwort im Knoten {tigerResolvedString} nicht den FHIRPath {tigerResolvedString} erfüllt")
+  @Dann(
+      "FHIR prüfe die aktuelle Antwort erfüllt im Knoten {tigerResolvedString} nicht den FHIRPath"
+          + " {tigerResolvedString}")
+  @Wenn(
+      "FHIR die aktuelle Antwort im Knoten {tigerResolvedString} nicht den FHIRPath"
+          + " {tigerResolvedString} erfüllt")
   public void tgrCurrentResponseFailsTheFhirPath(final String rbelPath, final String fhirPath) {
     fhirPathValidation.tgrCurrentResponseFailsTheFhirPath(rbelPath, fhirPath);
   }
 
-  @Then("FHIR evaluate FHIRPath {tigerResolvedString} on current response body and store first element as primitive value in variable {tigerResolvedString}")
-  @Dann("FHIR prüfe die aktuelle Antwort den FHIRPath {tigerResolvedString} und speichere das erste Ergebnis als primitiven Wert in Variable {tigerResolvedString}")
-  public void fhirEvaluateFHIRPathTigerResolvedStringOnCurrentResponseBodyAndStoreResultInVariableString(
-      final String fhirPath, final String variable) {
+  @Then(
+      "FHIR evaluate FHIRPath {tigerResolvedString} on current response body and store first"
+          + " element as primitive value in variable {tigerResolvedString}")
+  @Dann(
+      "FHIR prüfe die aktuelle Antwort den FHIRPath {tigerResolvedString} und speichere das erste"
+          + " Ergebnis als primitiven Wert in Variable {tigerResolvedString}")
+  public void
+      fhirEvaluateFHIRPathTigerResolvedStringOnCurrentResponseBodyAndStoreResultInVariableString(
+          final String fhirPath, final String variable) {
     String value = fhirPathValidation.getFirstElementAsPrimitiveValueForFhirPath(fhirPath);
     if (value != null) {
       TigerGlobalConfiguration.putValue(variable, value, ConfigurationValuePrecedence.TEST_CONTEXT);

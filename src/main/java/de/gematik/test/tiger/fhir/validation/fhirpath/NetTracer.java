@@ -26,12 +26,14 @@ public class NetTracer {
   private final RBelValidatorGlue rBelValidatorGlue = new RBelValidatorGlue();
 
   public Optional<String> getCurrentRequestsRawStringByRbelPath(final String rbelPath) {
-    return Optional.ofNullable(rBelValidatorGlue.getRbelValidator().findElementInCurrentRequest(rbelPath))
+    return Optional.ofNullable(
+            rBelValidatorGlue.getRbelMessageRetriever().findElementInCurrentRequest(rbelPath))
         .map(RbelElement::getRawStringContent);
   }
 
   public Optional<String> getCurrentResponseRawStringByRbelPath(final String rbelPath) {
-    return Optional.ofNullable(rBelValidatorGlue.getRbelValidator().findElementInCurrentResponse(rbelPath))
+    return Optional.ofNullable(
+            rBelValidatorGlue.getRbelMessageRetriever().findElementInCurrentResponse(rbelPath))
         .map(RbelElement::getRawStringContent);
   }
 }

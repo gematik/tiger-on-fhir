@@ -18,13 +18,10 @@ package de.gematik.test.tiger.glue.fhir;
 
 import static de.gematik.test.tiger.glue.fhir.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.assertj.core.api.InstanceOfAssertFactories.LIST;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
 import de.gematik.test.tiger.common.config.TigerGlobalConfiguration;
 import de.gematik.test.tiger.fhir.validation.fhirpath.FhirPathValidation;
 import de.gematik.test.tiger.fhir.validation.fhirpath.NetTracer;
@@ -72,8 +69,8 @@ class FhirPathValidationGlueTest {
   @DisplayName("Empty request body should serve an appropriate error")
   void emptyRequestBodyShouldServeAnAppropriateError() {
     // Arrange
-    when(netTracer.getCurrentRequestsRawStringByRbelPath(FhirPathValidation.RBEL_SELECTOR_FOR_BODY)).thenReturn(
-        Optional.empty());
+    when(netTracer.getCurrentRequestsRawStringByRbelPath(FhirPathValidation.RBEL_SELECTOR_FOR_BODY))
+        .thenReturn(Optional.empty());
     when(netTracer.getCurrentRequestsRawStringByRbelPath("$.headers.content-type"))
         .thenReturn(Optional.of("application/fhir+json"));
 
@@ -96,8 +93,8 @@ class FhirPathValidationGlueTest {
   @DisplayName("Empty response body should serve an appropriate error")
   void emptyResponseBodyShouldServeAnAppropriateError() {
     // Arrange
-    when(netTracer.getCurrentResponseRawStringByRbelPath(FhirPathValidation.RBEL_SELECTOR_FOR_BODY)).thenReturn(
-        Optional.empty());
+    when(netTracer.getCurrentResponseRawStringByRbelPath(FhirPathValidation.RBEL_SELECTOR_FOR_BODY))
+        .thenReturn(Optional.empty());
     when(netTracer.getCurrentResponseRawStringByRbelPath("$.headers.content-type"))
         .thenReturn(Optional.of("application/fhir+json"));
 
@@ -144,7 +141,8 @@ class FhirPathValidationGlueTest {
     // Arrange
     when(netTracer.getCurrentResponseRawStringByRbelPath(FhirPathValidation.RBEL_SELECTOR_FOR_BODY))
         .thenReturn(Optional.of(getFhirRessourceAsJson()));
-    when(netTracer.getCurrentResponseRawStringByRbelPath(FhirPathValidation.RBEL_SELECTOR_FOR_CONTENT_TYPE_HEADER))
+    when(netTracer.getCurrentResponseRawStringByRbelPath(
+            FhirPathValidation.RBEL_SELECTOR_FOR_CONTENT_TYPE_HEADER))
         .thenReturn(Optional.empty());
     final String fhirPath = getTruthyResultFhirPath();
 
@@ -179,7 +177,7 @@ class FhirPathValidationGlueTest {
         .hasType(Type.INFO)
         .hasTitle(fhirPath)
         .extracting(Evidence::getDetails)
-        .asList()
+        .asInstanceOf(LIST)
         .hasOnlyElementsOfTypes(BooleanType.class)
         .hasSize(1)
         .satisfies(
@@ -208,7 +206,7 @@ class FhirPathValidationGlueTest {
         .hasType(Type.INFO)
         .hasTitle(fhirPath)
         .extracting(Evidence::getDetails)
-        .asList()
+        .asInstanceOf(LIST)
         .hasOnlyElementsOfTypes(BooleanType.class)
         .hasSize(1)
         .satisfies(
@@ -238,7 +236,7 @@ class FhirPathValidationGlueTest {
         .hasType(Type.INFO)
         .hasTitle(fhirPath)
         .extracting(Evidence::getDetails)
-        .asList()
+        .asInstanceOf(LIST)
         .hasOnlyElementsOfTypes(BooleanType.class)
         .hasSize(1)
         .satisfies(
@@ -268,7 +266,7 @@ class FhirPathValidationGlueTest {
         .hasType(Type.INFO)
         .hasTitle(fhirPath)
         .extracting(Evidence::getDetails)
-        .asList()
+        .asInstanceOf(LIST)
         .hasOnlyElementsOfTypes(BooleanType.class)
         .hasSize(1)
         .satisfies(
@@ -298,7 +296,7 @@ class FhirPathValidationGlueTest {
         .hasType(Type.INFO)
         .hasTitle(fhirPath)
         .extracting(Evidence::getDetails)
-        .asList()
+        .asInstanceOf(LIST)
         .hasOnlyElementsOfTypes(BooleanType.class)
         .hasSize(1)
         .satisfies(
@@ -340,7 +338,9 @@ class FhirPathValidationGlueTest {
     assertThatThrownBy(
             () ->
                 underTest.tgrCurrentResponseEvaluatesTheFhirPath(
-                    FhirPathValidation.RBEL_SELECTOR_FOR_BODY, fhirPath, "Achtung diese Fehlermeldung wird gezeigt"))
+                    FhirPathValidation.RBEL_SELECTOR_FOR_BODY,
+                    fhirPath,
+                    "Achtung diese Fehlermeldung wird gezeigt"))
         .isInstanceOf(AssertionError.class)
         .hasMessageContaining("Achtung diese Fehlermeldung wird gezeigt");
   }
@@ -378,7 +378,9 @@ class FhirPathValidationGlueTest {
     assertThatThrownBy(
             () ->
                 underTest.tgrCurrentRequestEvaluatesTheFhirPath(
-                    FhirPathValidation.RBEL_SELECTOR_FOR_BODY, fhirPath, "Achtung diese Fehlermeldung wird gezeigt"))
+                    FhirPathValidation.RBEL_SELECTOR_FOR_BODY,
+                    fhirPath,
+                    "Achtung diese Fehlermeldung wird gezeigt"))
         .isInstanceOf(AssertionError.class)
         .hasMessageContaining("Achtung diese Fehlermeldung wird gezeigt");
   }
@@ -436,7 +438,7 @@ class FhirPathValidationGlueTest {
                     .hasType(Type.INFO)
                     .hasTitle(getTruthyResultFhirPath())
                     .extracting(Evidence::getDetails)
-                    .asList()
+                    .asInstanceOf(LIST)
                     .hasOnlyElementsOfTypes(BooleanType.class)
                     .hasSize(1)
                     .satisfies(
@@ -450,7 +452,7 @@ class FhirPathValidationGlueTest {
                     .hasType(Type.ERROR)
                     .hasTitle(falsyErrorMessage)
                     .extracting(Evidence::getDetails)
-                    .asList()
+                    .asInstanceOf(LIST)
                     .hasOnlyElementsOfTypes(BooleanType.class)
                     .hasSize(1)
                     .satisfies(
@@ -464,7 +466,7 @@ class FhirPathValidationGlueTest {
                     .hasType(Type.ERROR)
                     .hasTitle(nonBooleanErrorMessage)
                     .extracting(Evidence::getDetails)
-                    .asList()
+                    .asInstanceOf(LIST)
                     .hasOnlyElementsOfTypes(Bundle.BundleEntryComponent.class)
                     .hasSize(7)
                     .satisfies(
@@ -488,7 +490,7 @@ class FhirPathValidationGlueTest {
                     .hasType(Type.ERROR)
                     .hasTitle(emptyErrorMessage)
                     .extracting(Evidence::getDetails)
-                    .asList()
+                    .asInstanceOf(LIST)
                     .isEmpty(),
             evidence ->
                 assertThat(evidence)
@@ -496,7 +498,7 @@ class FhirPathValidationGlueTest {
                     .hasType(Type.INFO)
                     .hasTitle(getTruthyResultFhirPath())
                     .extracting(Evidence::getDetails)
-                    .asList()
+                    .asInstanceOf(LIST)
                     .hasOnlyElementsOfTypes(BooleanType.class)
                     .hasSize(1)
                     .satisfies(
@@ -526,7 +528,7 @@ class FhirPathValidationGlueTest {
         .hasType(Type.INFO)
         .hasTitle(fhirPath)
         .extracting(Evidence::getDetails)
-        .asList()
+        .asInstanceOf(LIST)
         .hasOnlyElementsOfTypes(BooleanType.class)
         .hasSize(1)
         .satisfies(
@@ -592,7 +594,7 @@ class FhirPathValidationGlueTest {
                     .hasType(Type.INFO)
                     .hasTitle(getTruthyResultFhirPath())
                     .extracting(Evidence::getDetails)
-                    .asList()
+                    .asInstanceOf(LIST)
                     .hasOnlyElementsOfTypes(BooleanType.class)
                     .hasSize(1)
                     .satisfies(
@@ -606,7 +608,7 @@ class FhirPathValidationGlueTest {
                     .hasType(Type.ERROR)
                     .hasTitle(falsyErrorMessage)
                     .extracting(Evidence::getDetails)
-                    .asList()
+                    .asInstanceOf(LIST)
                     .hasOnlyElementsOfTypes(BooleanType.class)
                     .hasSize(1)
                     .satisfies(
@@ -620,7 +622,7 @@ class FhirPathValidationGlueTest {
                     .hasType(Type.ERROR)
                     .hasTitle(nonBooleanErrorMessage)
                     .extracting(Evidence::getDetails)
-                    .asList()
+                    .asInstanceOf(LIST)
                     .hasOnlyElementsOfTypes(Bundle.BundleEntryComponent.class)
                     .hasSize(7)
                     .satisfies(
@@ -644,7 +646,7 @@ class FhirPathValidationGlueTest {
                     .hasType(Type.ERROR)
                     .hasTitle(emptyErrorMessage)
                     .extracting(Evidence::getDetails)
-                    .asList()
+                    .asInstanceOf(LIST)
                     .isEmpty(),
             evidence ->
                 assertThat(evidence)
@@ -652,7 +654,7 @@ class FhirPathValidationGlueTest {
                     .hasType(Type.INFO)
                     .hasTitle(getTruthyResultFhirPath())
                     .extracting(Evidence::getDetails)
-                    .asList()
+                    .asInstanceOf(LIST)
                     .hasOnlyElementsOfTypes(BooleanType.class)
                     .hasSize(1)
                     .satisfies(
@@ -663,90 +665,117 @@ class FhirPathValidationGlueTest {
   }
 
   @Test
-  @DisplayName("at JSON Response should evaluate valid fhir path expressions and store it to a variable - one boolean result")
+  @DisplayName(
+      "at JSON Response should evaluate valid fhir path expressions and store it to a variable -"
+          + " one boolean result")
   @SneakyThrows
-  void fhirEvaluateFHIRPathTigerResolvedStringOnCurrentResponseBodyAndStoreResultInVariableString_ShouldEvaluateOneValidFhirPathExpressions() {
+  void
+      fhirEvaluateFHIRPathTigerResolvedStringOnCurrentResponseBodyAndStoreResultInVariableString_ShouldEvaluateOneValidFhirPathExpressions() {
     // Arrange
     when(netTracer.getCurrentResponseRawStringByRbelPath(FhirPathValidation.RBEL_SELECTOR_FOR_BODY))
         .thenReturn(Optional.of(getFhirRessourceAsJson()));
-    when(netTracer.getCurrentResponseRawStringByRbelPath(FhirPathValidation.RBEL_SELECTOR_FOR_CONTENT_TYPE_HEADER))
+    when(netTracer.getCurrentResponseRawStringByRbelPath(
+            FhirPathValidation.RBEL_SELECTOR_FOR_CONTENT_TYPE_HEADER))
         .thenReturn(Optional.of("application/json"));
     final String fhirPath = getTruthyResultFhirPath();
 
     String variable = "keyVar";
     // Act
-    underTest.fhirEvaluateFHIRPathTigerResolvedStringOnCurrentResponseBodyAndStoreResultInVariableString(fhirPath,
-        variable);
+    underTest
+        .fhirEvaluateFHIRPathTigerResolvedStringOnCurrentResponseBodyAndStoreResultInVariableString(
+            fhirPath, variable);
     // Assert
-    org.assertj.core.api.Assertions.assertThat(TigerGlobalConfiguration.readString(variable)).isEqualTo("true");
+    org.assertj.core.api.Assertions.assertThat(TigerGlobalConfiguration.readString(variable))
+        .isEqualTo("true");
   }
 
   @Test
-  @DisplayName("at JSON Response should evaluate valid fhir path expressions and store it to a variable - one int result")
+  @DisplayName(
+      "at JSON Response should evaluate valid fhir path expressions and store it to a variable -"
+          + " one int result")
   @SneakyThrows
-  void fhirEvaluateFHIRPathTigerResolvedStringOnCurrentResponseBodyAndStoreResultInVariableString_ShouldEvaluateOneIntValidFhirPathExpressions() {
+  void
+      fhirEvaluateFHIRPathTigerResolvedStringOnCurrentResponseBodyAndStoreResultInVariableString_ShouldEvaluateOneIntValidFhirPathExpressions() {
     // Arrange
     when(netTracer.getCurrentResponseRawStringByRbelPath(FhirPathValidation.RBEL_SELECTOR_FOR_BODY))
         .thenReturn(Optional.of(getFhirRessourceAsJson()));
-    when(netTracer.getCurrentResponseRawStringByRbelPath(FhirPathValidation.RBEL_SELECTOR_FOR_CONTENT_TYPE_HEADER))
+    when(netTracer.getCurrentResponseRawStringByRbelPath(
+            FhirPathValidation.RBEL_SELECTOR_FOR_CONTENT_TYPE_HEADER))
         .thenReturn(Optional.of("application/json"));
     final String fhirPath = getCountResultFhirPath();
 
     String variable = "keyVar";
     // Act
-    underTest.fhirEvaluateFHIRPathTigerResolvedStringOnCurrentResponseBodyAndStoreResultInVariableString(fhirPath,
-        variable);
+    underTest
+        .fhirEvaluateFHIRPathTigerResolvedStringOnCurrentResponseBodyAndStoreResultInVariableString(
+            fhirPath, variable);
     // Assert
-    org.assertj.core.api.Assertions.assertThat(TigerGlobalConfiguration.readString(variable)).isEqualTo("1");
+    org.assertj.core.api.Assertions.assertThat(TigerGlobalConfiguration.readString(variable))
+        .isEqualTo("1");
   }
 
   @Test
-  @DisplayName("at JSON Response should evaluate valid fhir path expressions and store it to a variable - one dateAndTime result")
+  @DisplayName(
+      "at JSON Response should evaluate valid fhir path expressions and store it to a variable -"
+          + " one dateAndTime result")
   @SneakyThrows
-  void fhirEvaluateFHIRPathTigerResolvedStringOnCurrentResponseBodyAndStoreResultInVariableString_ShouldEvaluateOneDateValidFhirPathExpressions() {
+  void
+      fhirEvaluateFHIRPathTigerResolvedStringOnCurrentResponseBodyAndStoreResultInVariableString_ShouldEvaluateOneDateValidFhirPathExpressions() {
     // Arrange
     when(netTracer.getCurrentResponseRawStringByRbelPath(FhirPathValidation.RBEL_SELECTOR_FOR_BODY))
         .thenReturn(Optional.of(getFhirRessourceAsJson()));
-    when(netTracer.getCurrentResponseRawStringByRbelPath(FhirPathValidation.RBEL_SELECTOR_FOR_CONTENT_TYPE_HEADER))
+    when(netTracer.getCurrentResponseRawStringByRbelPath(
+            FhirPathValidation.RBEL_SELECTOR_FOR_CONTENT_TYPE_HEADER))
         .thenReturn(Optional.of("application/json"));
     final String fhirPath = getDateResultFhirPath();
 
     String variable = "keyVar";
     // Act
-    underTest.fhirEvaluateFHIRPathTigerResolvedStringOnCurrentResponseBodyAndStoreResultInVariableString(fhirPath,
-        variable);
+    underTest
+        .fhirEvaluateFHIRPathTigerResolvedStringOnCurrentResponseBodyAndStoreResultInVariableString(
+            fhirPath, variable);
     // Assert
     org.assertj.core.api.Assertions.assertThat(TigerGlobalConfiguration.readString(variable))
         .isEqualTo("2022-05-20T08:00:00Z");
   }
 
   @Test
-  @DisplayName("at JSON Response should evaluate valid fhir path expressions and store it to a variable - two results")
+  @DisplayName(
+      "at JSON Response should evaluate valid fhir path expressions and store it to a variable -"
+          + " two results")
   @SneakyThrows
-  void fhirEvaluateFHIRPathTigerResolvedStringOnCurrentResponseBodyAndStoreResultInVariableString_ShouldEvaluateTwoResultsValidFhirPathExpressions() {
+  void
+      fhirEvaluateFHIRPathTigerResolvedStringOnCurrentResponseBodyAndStoreResultInVariableString_ShouldEvaluateTwoResultsValidFhirPathExpressions() {
     // Arrange
     when(netTracer.getCurrentResponseRawStringByRbelPath(FhirPathValidation.RBEL_SELECTOR_FOR_BODY))
         .thenReturn(Optional.of(getFhirRessourceAsJson()));
-    when(netTracer.getCurrentResponseRawStringByRbelPath(FhirPathValidation.RBEL_SELECTOR_FOR_CONTENT_TYPE_HEADER))
+    when(netTracer.getCurrentResponseRawStringByRbelPath(
+            FhirPathValidation.RBEL_SELECTOR_FOR_CONTENT_TYPE_HEADER))
         .thenReturn(Optional.of("application/json"));
     final String fhirPath = getMoreResultFhirPath();
 
     String variable = "keyVar";
     // Act
-    underTest.fhirEvaluateFHIRPathTigerResolvedStringOnCurrentResponseBodyAndStoreResultInVariableString(fhirPath,
-        variable);
+    underTest
+        .fhirEvaluateFHIRPathTigerResolvedStringOnCurrentResponseBodyAndStoreResultInVariableString(
+            fhirPath, variable);
     // Assert
-    org.assertj.core.api.Assertions.assertThat(TigerGlobalConfiguration.readString(variable)).isEqualTo("Practitioner");
+    org.assertj.core.api.Assertions.assertThat(TigerGlobalConfiguration.readString(variable))
+        .isEqualTo("Practitioner");
   }
 
   @Test
-  @DisplayName("at JSON Response should evaluate valid fhir path expressions and store it to a variable - complex result")
+  @DisplayName(
+      "at JSON Response should evaluate valid fhir path expressions and store it to a variable -"
+          + " complex result")
   @SneakyThrows
-  void fhirEvaluateFHIRPathTigerResolvedStringOnCurrentResponseBodyAndStoreResultInVariableString_ShouldEvaluateComplexFhirPathExpressions() {
+  void
+      fhirEvaluateFHIRPathTigerResolvedStringOnCurrentResponseBodyAndStoreResultInVariableString_ShouldEvaluateComplexFhirPathExpressions() {
     // Arrange
     when(netTracer.getCurrentResponseRawStringByRbelPath(FhirPathValidation.RBEL_SELECTOR_FOR_BODY))
         .thenReturn(Optional.of(getFhirRessourceAsJson()));
-    when(netTracer.getCurrentResponseRawStringByRbelPath(FhirPathValidation.RBEL_SELECTOR_FOR_CONTENT_TYPE_HEADER))
+    when(netTracer.getCurrentResponseRawStringByRbelPath(
+            FhirPathValidation.RBEL_SELECTOR_FOR_CONTENT_TYPE_HEADER))
         .thenReturn(Optional.of("application/json"));
     final String fhirPath = getComplexResultFhirPath();
 
@@ -755,8 +784,10 @@ class FhirPathValidationGlueTest {
     final var thrownException =
         assertThrows(
             AssertionError.class,
-            () -> underTest.fhirEvaluateFHIRPathTigerResolvedStringOnCurrentResponseBodyAndStoreResultInVariableString(
-                fhirPath, variable));
+            () ->
+                underTest
+                    .fhirEvaluateFHIRPathTigerResolvedStringOnCurrentResponseBodyAndStoreResultInVariableString(
+                        fhirPath, variable));
 
     // Assert
     final String complexFhirPathErrorMessage =
@@ -766,13 +797,17 @@ class FhirPathValidationGlueTest {
   }
 
   @Test
-  @DisplayName("at JSON Response should evaluate valid fhir path expressions and store it to a variable - invalid FHIRPath")
+  @DisplayName(
+      "at JSON Response should evaluate valid fhir path expressions and store it to a variable -"
+          + " invalid FHIRPath")
   @SneakyThrows
-  void fhirEvaluateFHIRPathTigerResolvedStringOnCurrentResponseBodyAndStoreResultInVariableString_ShouldFailWithInvalidFhirPathExpressions() {
+  void
+      fhirEvaluateFHIRPathTigerResolvedStringOnCurrentResponseBodyAndStoreResultInVariableString_ShouldFailWithInvalidFhirPathExpressions() {
     // Arrange
     when(netTracer.getCurrentResponseRawStringByRbelPath(FhirPathValidation.RBEL_SELECTOR_FOR_BODY))
         .thenReturn(Optional.of(getFhirRessourceAsJson()));
-    when(netTracer.getCurrentResponseRawStringByRbelPath(FhirPathValidation.RBEL_SELECTOR_FOR_CONTENT_TYPE_HEADER))
+    when(netTracer.getCurrentResponseRawStringByRbelPath(
+            FhirPathValidation.RBEL_SELECTOR_FOR_CONTENT_TYPE_HEADER))
         .thenReturn(Optional.of("application/json"));
     final String fhirPath = getInvalidFhirPath();
 
@@ -781,8 +816,10 @@ class FhirPathValidationGlueTest {
     final var thrownException =
         assertThrows(
             AssertionError.class,
-            () -> underTest.fhirEvaluateFHIRPathTigerResolvedStringOnCurrentResponseBodyAndStoreResultInVariableString(
-                fhirPath, variable));
+            () ->
+                underTest
+                    .fhirEvaluateFHIRPathTigerResolvedStringOnCurrentResponseBodyAndStoreResultInVariableString(
+                        fhirPath, variable));
 
     // Assert
     final String invalidFhirPathErrorMessage = "invalid FHIRPath: " + getInvalidFhirPath();
@@ -791,13 +828,17 @@ class FhirPathValidationGlueTest {
   }
 
   @Test
-  @DisplayName("at JSON Response should evaluate valid fhir path expressions and store it to a variable - empty result")
+  @DisplayName(
+      "at JSON Response should evaluate valid fhir path expressions and store it to a variable -"
+          + " empty result")
   @SneakyThrows
-  void fhirEvaluateFHIRPathTigerResolvedStringOnCurrentResponseBodyAndStoreResultInVariableString_ShouldFailWithEmptyFhirPathExpressions() {
+  void
+      fhirEvaluateFHIRPathTigerResolvedStringOnCurrentResponseBodyAndStoreResultInVariableString_ShouldFailWithEmptyFhirPathExpressions() {
     // Arrange
     when(netTracer.getCurrentResponseRawStringByRbelPath(FhirPathValidation.RBEL_SELECTOR_FOR_BODY))
         .thenReturn(Optional.of(getFhirRessourceAsJson()));
-    when(netTracer.getCurrentResponseRawStringByRbelPath(FhirPathValidation.RBEL_SELECTOR_FOR_CONTENT_TYPE_HEADER))
+    when(netTracer.getCurrentResponseRawStringByRbelPath(
+            FhirPathValidation.RBEL_SELECTOR_FOR_CONTENT_TYPE_HEADER))
         .thenReturn(Optional.of("application/json"));
     final String fhirPath = getEmptyResultFhirPath();
 
@@ -806,11 +847,14 @@ class FhirPathValidationGlueTest {
     final var thrownException =
         assertThrows(
             AssertionError.class,
-            () -> underTest.fhirEvaluateFHIRPathTigerResolvedStringOnCurrentResponseBodyAndStoreResultInVariableString(
-                fhirPath, variable));
+            () ->
+                underTest
+                    .fhirEvaluateFHIRPathTigerResolvedStringOnCurrentResponseBodyAndStoreResultInVariableString(
+                        fhirPath, variable));
 
     // Assert
-    final String emptyFhirPathErrorMessage = "result is null or empty for FHIRPath: " + getEmptyResultFhirPath();
+    final String emptyFhirPathErrorMessage =
+        "result is null or empty for FHIRPath: " + getEmptyResultFhirPath();
     org.assertj.core.api.Assertions.assertThat(thrownException)
         .hasMessageContainingAll(emptyFhirPathErrorMessage);
   }
@@ -838,21 +882,24 @@ class FhirPathValidationGlueTest {
   private void requestServesValidXmlRessources(String fhirResource) {
     when(netTracer.getCurrentRequestsRawStringByRbelPath(FhirPathValidation.RBEL_SELECTOR_FOR_BODY))
         .thenReturn(Optional.of(fhirResource));
-    when(netTracer.getCurrentRequestsRawStringByRbelPath(FhirPathValidation.RBEL_SELECTOR_FOR_CONTENT_TYPE_HEADER))
+    when(netTracer.getCurrentRequestsRawStringByRbelPath(
+            FhirPathValidation.RBEL_SELECTOR_FOR_CONTENT_TYPE_HEADER))
         .thenReturn(Optional.of("application/xml"));
   }
 
   private void requestServesValidJsonRessources(String fhirResource) {
     when(netTracer.getCurrentRequestsRawStringByRbelPath(FhirPathValidation.RBEL_SELECTOR_FOR_BODY))
         .thenReturn(Optional.of(fhirResource));
-    when(netTracer.getCurrentRequestsRawStringByRbelPath(FhirPathValidation.RBEL_SELECTOR_FOR_CONTENT_TYPE_HEADER))
+    when(netTracer.getCurrentRequestsRawStringByRbelPath(
+            FhirPathValidation.RBEL_SELECTOR_FOR_CONTENT_TYPE_HEADER))
         .thenReturn(Optional.of("application/json"));
   }
 
   private void responseServesValidXmlRessources(String fhirResource) {
     when(netTracer.getCurrentResponseRawStringByRbelPath(FhirPathValidation.RBEL_SELECTOR_FOR_BODY))
         .thenReturn(Optional.of(fhirResource));
-    when(netTracer.getCurrentResponseRawStringByRbelPath(FhirPathValidation.RBEL_SELECTOR_FOR_CONTENT_TYPE_HEADER))
+    when(netTracer.getCurrentResponseRawStringByRbelPath(
+            FhirPathValidation.RBEL_SELECTOR_FOR_CONTENT_TYPE_HEADER))
         .thenReturn(Optional.of("application/xml"));
   }
 
@@ -868,7 +915,8 @@ class FhirPathValidationGlueTest {
 
   @NotNull
   private static String getMoreResultFhirPath() {
-    return "Bundle.entry.resource.author.type.where(value != \"Practitioner\" or value != \"Device\")";
+    return "Bundle.entry.resource.author.type.where(value != \"Practitioner\" or value !="
+        + " \"Device\")";
   }
 
   @NotNull
