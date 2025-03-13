@@ -1,8 +1,13 @@
 # Changelog tiger-on-fhir
 
+# Release 1.2.8
+* TGRFHIR-27: dependency update (ref validator to v2.7, tiger to v3.5.0)
+* TGRFHIR-29: dependency update (ref validator to v2.8, tiger to v3.7.0)
+
 # Release 1.2.7
 
 * TGRFHIR-26: dependency update (ref validator to v2.6, tiger to v3.4.0)
+* TGR-1660: Change notification for jenkins release
 
 # Release 1.2.6
 

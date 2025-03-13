@@ -20,6 +20,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import de.gematik.test.tiger.fhir.validation.plugins.PluginLoader;
 import java.io.File;
 import java.nio.file.Paths;
@@ -27,43 +28,44 @@ import org.junit.jupiter.api.Test;
 
 class PluginLoaderTest {
 
-    private static final String PLUGIN_PATH = Paths.get("").toAbsolutePath() + File.separator + "refv-plugins";
+  private static final String PLUGIN_PATH =
+      Paths.get("").toAbsolutePath() + File.separator + "refv-plugins";
 
-    @Test
-    void testLoadPlugins() {
-        PluginLoader pluginLoader = new PluginLoader();
+  @Test
+  void testLoadPlugins() {
+    PluginLoader pluginLoader = new PluginLoader();
 
-        var plugins = pluginLoader.loadPlugins(PLUGIN_PATH);
+    var plugins = pluginLoader.loadPlugins(PLUGIN_PATH);
 
-        assertFalse(plugins.isEmpty());
-        assertTrue(plugins.containsKey("minimal"));
-        assertEquals(1, plugins.keySet().size(),"More plugins were loaded than expected");
-    }
+    assertFalse(plugins.isEmpty());
+    assertTrue(plugins.containsKey("minimal"));
+    assertEquals(1, plugins.keySet().size(), "More plugins were loaded than expected");
+  }
 
-    @Test
-    void testLoadPluginsThrowsIllegalArgumentException() {
-        PluginLoader pluginLoader = new PluginLoader();
+  @Test
+  void testLoadPluginsThrowsIllegalArgumentException() {
+    PluginLoader pluginLoader = new PluginLoader();
 
-        assertThatThrownBy(() -> pluginLoader.loadPlugins("nonexistent/path/"))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("Plugins directory is missing. No such file or directory");
-    }
+    assertThatThrownBy(() -> pluginLoader.loadPlugins("nonexistent/path/"))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessageContaining("Plugins directory is missing. No such file or directory");
+  }
 
-    @Test
-    void testLoadPluginsReturnsEmpty() {
-        PluginLoader pluginLoader = new PluginLoader();
+  @Test
+  void testLoadPluginsReturnsEmpty() {
+    PluginLoader pluginLoader = new PluginLoader();
 
-        var plugins = pluginLoader.loadPlugins("src/test/resources/de/");
+    var plugins = pluginLoader.loadPlugins("src/test/resources/de/");
 
-        assertTrue(plugins.isEmpty());
-    }
+    assertTrue(plugins.isEmpty());
+  }
 
-    @Test
-    void testLoadPluginsNoConfigThrowsException() {
-        PluginLoader pluginLoader = new PluginLoader();
+  @Test
+  void testLoadPluginsNoConfigThrowsException() {
+    PluginLoader pluginLoader = new PluginLoader();
 
-        assertThatThrownBy(() -> pluginLoader.loadPlugins("src/test/resources/plugins/"))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("No config file found");
-    }
+    assertThatThrownBy(() -> pluginLoader.loadPlugins("src/test/resources/plugins/"))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessageContaining("No config file found");
+  }
 }

@@ -26,27 +26,34 @@ import java.util.stream.Stream;
 
 public class RefvPluginHelper {
 
-    private static final String PLUGINS_DIR = "refv-plugins";
-    private final PluginLoader pluginLoader = new PluginLoader();
+  private static final String PLUGINS_DIR = "refv-plugins";
+  private final PluginLoader pluginLoader = new PluginLoader();
 
-    public Plugin getPlugin(String validationModuleId) {
-        String pluginsDirectory = getPluginsDirectory();
-        Plugin plugin = null;
+  public Plugin getPlugin(String validationModuleId) {
+    String pluginsDirectory = getPluginsDirectory();
+    Plugin plugin = null;
 
-        if(new File(pluginsDirectory).exists()) {
-            var plugins = pluginLoader.loadPlugins(pluginsDirectory);
-            plugin = plugins.get(validationModuleId);
-            if (plugin == null) {
-                var supportedValidationModules = Stream.concat(plugins.keySet().stream(), Arrays.stream(SupportedValidationModule.values())).map(Object::toString).toList();
-                throw new IllegalArgumentException(String.format("Validation module [%s] unsupported. Supported validation modules: %s", validationModuleId, supportedValidationModules));
-            }
-        }
-
-        return plugin;
+    if (new File(pluginsDirectory).exists()) {
+      var plugins = pluginLoader.loadPlugins(pluginsDirectory);
+      plugin = plugins.get(validationModuleId);
+      if (plugin == null) {
+        var supportedValidationModules =
+            Stream.concat(
+                    plugins.keySet().stream(), Arrays.stream(SupportedValidationModule.values()))
+                .map(Object::toString)
+                .toList();
+        throw new IllegalArgumentException(
+            String.format(
+                "Validation module [%s] unsupported. Supported validation modules: %s",
+                validationModuleId, supportedValidationModules));
+      }
     }
 
-    private String getPluginsDirectory() {
-        String rootDirectory = Paths.get("").toAbsolutePath().toString(); // get the root directory
-        return rootDirectory + File.separator + PLUGINS_DIR;
-    }
+    return plugin;
+  }
+
+  private String getPluginsDirectory() {
+    String rootDirectory = Paths.get("").toAbsolutePath().toString(); // get the root directory
+    return rootDirectory + File.separator + PLUGINS_DIR;
+  }
 }

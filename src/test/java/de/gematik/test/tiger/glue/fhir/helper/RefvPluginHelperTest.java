@@ -18,28 +18,29 @@ package de.gematik.test.tiger.glue.fhir.helper;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+
 import de.gematik.refv.Plugin;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 
 class RefvPluginHelperTest {
 
-    private final RefvPluginHelper pluginHelper = new RefvPluginHelper();
+  private final RefvPluginHelper pluginHelper = new RefvPluginHelper();
 
-    @Test
-    @SneakyThrows
-    void testGetPlugin() {
-        Plugin plugin = (Plugin) pluginHelper.getPlugin("minimal");
+  @Test
+  @SneakyThrows
+  void testGetPlugin() {
+    Plugin plugin = (Plugin) pluginHelper.getPlugin("minimal");
 
-        assertThat(plugin).isNotNull();
-        assertThat(plugin.getId()).isEqualTo("minimal");
-    }
+    assertThat(plugin).isNotNull();
+    assertThat(plugin.getId()).isEqualTo("minimal");
+  }
 
-    @Test
-    @SneakyThrows
-    void testGetPluginThrowsException() {
-        assertThatThrownBy(() -> pluginHelper.getPlugin("non-existent"))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("non-existent");
-    }
+  @Test
+  @SneakyThrows
+  void testGetPluginThrowsException() {
+    assertThatThrownBy(() -> pluginHelper.getPlugin("non-existent"))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessageContaining("non-existent");
+  }
 }

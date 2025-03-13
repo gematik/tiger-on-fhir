@@ -4,7 +4,7 @@ Funktionalität: FHIR Validation Deutsch
   Hintergrund:
     Gegeben sei TGR lösche aufgezeichnete Nachrichten
 
-  Szenario: FHIR-Validierung mit Hilfe des Referenz Validators
+  Szenario: FHIR-Validierung mit Ref Validator
     Gegeben sei TGR liest folgende .tgr Datei 'src/test/resources/fhir.tgr'
     Wenn TGR finde die nächste Anfrage mit dem Pfad '/erp/42'
     Dann FHIR prüfe die aktuelle Anfrage enthält im Body eine gültige ERP Ressource
@@ -12,7 +12,7 @@ Funktionalität: FHIR Validation Deutsch
     Wenn TGR finde die nächste Anfrage mit dem Pfad '.+'
     Dann FHIR prüfe die aktuelle Antwort enthält im Knoten '$.body' eine gültige ERP Ressource
 
-  Szenario: FHIR-Validierung mit Hilfe des Referenz Validators und Custom Profilen
+  Szenario: FHIR-Validierung mit Custom Profile
     Gegeben sei TGR liest folgende .tgr Datei 'src/test/resources/fhir.tgr'
     Wenn TGR finde die nächste Anfrage mit dem Pfad '/erp/42'
     Dann FHIR prüfe die aktuelle Anfrage enthält im Body eine gültige ERP Ressource, die zum Profil "https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Bundle|1.1.0" konform ist
@@ -76,27 +76,27 @@ Funktionalität: FHIR Validation Deutsch
     """
 
   Szenario: Reports der vorhergehenden Szenarien sollen alle Details enthalten
-    Dann in "target/evidences/" exists a file matching "^evidence_FHIR-Validierung_mit_Hilfe_des_Referenz_Validators_[0-9].+\.html$" containing all of the following lines:
+    Dann in "target/evidences/" exists a file matching "^evidence_FHIR-Validierung_mit_Ref_Valida[0-9a-f\-]+_.+\.html$" containing all of the following lines:
     """
-    FHIR-Validierung mit Hilfe des Referenz Validators
+    FHIR-Validierung mit Ref Validator
     Dann FHIR pr&uuml;fe die aktuelle Anfrage enth&auml;lt im Body eine g&uuml;ltige ERP Ressource
     Und FHIR pr&uuml;fe die aktuelle Antwort enth&auml;lt im Body eine g&uuml;ltige ERP Ressource
     evidence-type-INFO"
     """
-    Und in "target/evidences/" exists no file matching "^evidence_FHIR-Validierung_mit_Hilfe_des_Referenz_Validators_[0-9].+\.html$" containing any of the following lines:
+    Und in "target/evidences/" exists no file matching "^evidence_FHIR-Validierung_mit_Ref_Valida[0-9a-f\-]+_.+\.html$" containing any of the following lines:
     """
     evidence-type-WARN"
     evidence-type-ERROR"
     """
-    Und in "target/evidences/" exists a file matching "^evidence_FHIR-Validierung_mit_Hilfe_des_Referenz_Validators_und_Custom_Profilen_[0-9].+\.html$" containing all of the following lines:
+    Und in "target/evidences/" exists a file matching "^evidence_FHIR-Validierung_mit_Custom_Pr[0-9a-f\-]+_.+\.html$" containing all of the following lines:
     """
-    FHIR-Validierung mit Hilfe des Referenz Validators und Custom Profilen
+    FHIR-Validierung mit Custom Profile
     Dann FHIR pr&uuml;fe die aktuelle Anfrage enth&auml;lt im Body eine g&uuml;ltige ERP Ressource, die zum Profil &quot;https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Bundle|1.1.0&quot; konform ist
     Und FHIR pr&uuml;fe die aktuelle Anfrage enth&auml;lt im Knoten '$.body' eine g&uuml;ltige ERP Ressource, die zum Profil &quot;https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Bundle|1.1.0&quot; konform ist
     evidence-type-INFO
     evidence-type-INFO
     """
-    Und in "target/evidences/" exists no file matching "^evidence_FHIR-Validierung_mit_Hilfe_des_Referenz_Validators_und_Custom_Profilen_[0-9].+\.html$" containing any of the following lines:
+    Und in "target/evidences/" exists no file matching "^evidence_FHIR-Validierung_mit_Custom_Pr[0-9a-f\-]+_.+\.html$" containing any of the following lines:
     """
     evidence-type-ERROR"
     """
@@ -130,7 +130,7 @@ Funktionalität: FHIR Validation Deutsch
     Dann FHIR prüfe die aktuelle Antwort den FHIRPath 'Bundle.entry.resource.author.type.where(value = "Device").count()' und speichere das erste Ergebnis als primitiven Wert in Variable "test2"
     Dann TGR print variable "test"
 
-  Szenario: FHIR-Validation unter Verwendeung des Reference-Validators
+  Szenario: FHIR-Validation unter Verwendung des Reference-Validators
     Gegeben sei TGR liest folgende .tgr Datei 'src/test/resources/fhir.tgr'
     Wenn TGR finde die nächste Anfrage mit dem Pfad '/erp/42'
     Dann FHIR die aktuelle Anfrage im Body eine gültige ERP Ressource enthält

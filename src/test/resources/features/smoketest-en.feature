@@ -3,7 +3,7 @@ Feature: FHIR Validation English
   Background:
     Given TGR clear recorded messages
 
-  Scenario: FHIR-Validation with the help of the reference-validators
+  Scenario: FHIR-Vali with ref-validators
     Given TGR reads the following .tgr file 'src/test/resources/fhir.tgr'
     When TGR find request to path '/erp/42'
     And FHIR current response body evaluates the FHIRPath 'true' with error message 'blabla'
@@ -14,7 +14,8 @@ Feature: FHIR Validation English
     When TGR find next request to path '.+'
     Then FHIR current request at '$.body' is a valid ERP resource
 
-  Scenario: FHIR-Validation with the help of the reference-validators and custom profile
+
+  Scenario: FHIR-Vali with custom profile
     Given TGR reads the following .tgr file 'src/test/resources/fhir.tgr'
     When TGR find request to path '/erp/42'
     Then FHIR current request body is a valid ERP resource and conforms to profile "https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Bundle|1.1.0"
@@ -50,27 +51,27 @@ Feature: FHIR Validation English
     """
 
   Scenario: Report of previous scenarios should exist and contain its Details
-    Then in "target/evidences/" exists a file matching "^evidence_FHIR-Validation_with_the_help_of_the_reference-validators_[0-9].+\.html$" containing all of the following lines:
+    Then in "target/evidences/" exists a file matching "^evidence_FHIR-Vali_with_ref-validators_.+\.html$" containing all of the following lines:
     """
-    FHIR-Validation with the help of the reference-validators
+    FHIR-Vali with ref-validators
     Then FHIR current request body is a valid ERP resource
     Then FHIR current response body is a valid ERP resource
     evidence-type-INFO"
     """
-    And in "target/evidences/" exists no file matching "^evidence_FHIR-Validation_with_the_help_of_the_reference-validators_[0-9].+\.html$" containing any of the following lines:
+    And in "target/evidences/" exists no file matching "^evidence_FHIR-Vali_with_ref-validators_.+\.html$" containing any of the following lines:
     """
     evidence-type-WARN"
     evidence-type-ERROR"
     """
-    And in "target/evidences/" exists a file matching "^evidence_FHIR-Validation_with_the_help_of_the_reference-validators_and_custom_profile_[0-9].+\.html$" containing all of the following lines:
+    And in "target/evidences/" exists a file matching "^evidence_FHIR-Vali_with_custom_profile_.+\.html$" containing all of the following lines:
     """
-    FHIR-Validation with the help of the reference-validators and custom profile
+    FHIR-Vali with custom profile
     Then FHIR current request body is a valid ERP resource and conforms to profile &quot;https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Bundle|1.1.0&quot;
     Then FHIR current request at '$.body' is a valid ERP resource and conforms to profile &quot;https://fhir.kbv.de/StructureDefinition/KBV_PR_ERP_Bundle|1.1.0&quot;
     evidence-type-INFO
     evidence-type-INFO
     """
-    And in "target/evidences/" exists no file matching "^evidence_FHIR-Validation_with_the_help_of_the_reference-validators_and_custom_profile_[0-9].+\.html$" containing any of the following lines:
+    And in "target/evidences/" exists no file matching "^evidence_FHIR-Vali_with_custom_profile_.+\.html$" containing any of the following lines:
     """
     evidence-type-ERROR"
     """

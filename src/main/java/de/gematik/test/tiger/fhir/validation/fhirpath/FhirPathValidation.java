@@ -19,6 +19,7 @@ package de.gematik.test.tiger.fhir.validation.fhirpath;
 import static de.gematik.test.tiger.common.config.TigerGlobalConfiguration.resolvePlaceholders;
 import static org.assertj.core.api.Assertions.fail;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
+
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.support.DefaultProfileValidationSupport;
 import ca.uhn.fhir.parser.IParser;
@@ -59,34 +60,34 @@ public class FhirPathValidation {
   private final NetTracer netTracer;
 
   public void tgrCurrentRequestBodyEvaluatesTheFhirPath(
-      final String fhirPath, final Optional<String> errorMessage) {
+      final String fhirPath, final String errorMessage) {
     tgrCurrentRequestEvaluatesTheFhirPath(RBEL_SELECTOR_FOR_BODY, fhirPath, errorMessage);
   }
 
   public void tgrCurrentRequestBodyEvaluatesTheFhirPath(final String fhirPath) {
-    tgrCurrentRequestEvaluatesTheFhirPath(RBEL_SELECTOR_FOR_BODY, fhirPath, Optional.empty());
+    tgrCurrentRequestEvaluatesTheFhirPath(RBEL_SELECTOR_FOR_BODY, fhirPath, null);
   }
 
   public void tgrCurrentRequestEvaluatesTheFhirPath(final String rbelPath, final String fhirPath) {
-    tgrCurrentRequestEvaluatesTheFhirPaths(rbelPath, fhirPath, Optional.empty());
+    tgrCurrentRequestEvaluatesTheFhirPaths(rbelPath, fhirPath, null);
   }
 
   public void tgrCurrentRequestEvaluatesTheFhirPath(
-      final String rbelPath, final String fhirPath, final Optional<String> errorMessage) {
+      final String rbelPath, final String fhirPath, final String errorMessage) {
     tgrCurrentRequestEvaluatesTheFhirPaths(rbelPath, fhirPath, errorMessage);
   }
 
   public void tgrCurrentRequestBodyEvaluatesTheFhirPaths(final String fhirPaths) {
-    tgrCurrentRequestEvaluatesTheFhirPaths(RBEL_SELECTOR_FOR_BODY, fhirPaths, Optional.empty());
+    tgrCurrentRequestEvaluatesTheFhirPaths(RBEL_SELECTOR_FOR_BODY, fhirPaths, null);
   }
 
   public void tgrCurrentRequestEvaluatesTheFhirPaths(
       final String rbelPath, final String fhirPaths) {
-    tgrCurrentRequestEvaluatesTheFhirPaths(rbelPath, fhirPaths, Optional.empty());
+    tgrCurrentRequestEvaluatesTheFhirPaths(rbelPath, fhirPaths, null);
   }
 
   public void tgrCurrentRequestEvaluatesTheFhirPaths(
-      final String rbelPath, final String fhirPaths, final Optional<String> errorMessage) {
+      final String rbelPath, final String fhirPaths, final String errorMessage) {
     final Optional<String> fhirRessource = findElementInCurrentRequest(rbelPath);
 
     if (fhirRessource.isEmpty()) {
@@ -109,34 +110,34 @@ public class FhirPathValidation {
   }
 
   public void tgrCurrentResponseBodyEvaluatesTheFhirPath(final String fhirPath) {
-    tgrCurrentResponseEvaluatesTheFhirPath(RBEL_SELECTOR_FOR_BODY, fhirPath, Optional.empty());
+    tgrCurrentResponseEvaluatesTheFhirPath(RBEL_SELECTOR_FOR_BODY, fhirPath, null);
   }
 
   public void tgrCurrentResponseBodyEvaluatesTheFhirPath(
-      final String fhirPath, final Optional<String> errorMessage) {
+      final String fhirPath, final String errorMessage) {
     tgrCurrentResponseEvaluatesTheFhirPath(RBEL_SELECTOR_FOR_BODY, fhirPath, errorMessage);
   }
 
   public void tgrCurrentResponseEvaluatesTheFhirPath(final String rbelPath, final String fhirPath) {
-    tgrCurrentResponseEvaluatesTheFhirPaths(rbelPath, fhirPath, Optional.empty());
+    tgrCurrentResponseEvaluatesTheFhirPaths(rbelPath, fhirPath, null);
   }
 
   public void tgrCurrentResponseEvaluatesTheFhirPath(
-      final String rbelPath, final String fhirPath, final Optional<String> errorMessage) {
+      final String rbelPath, final String fhirPath, final String errorMessage) {
     tgrCurrentResponseEvaluatesTheFhirPaths(rbelPath, fhirPath, errorMessage);
   }
 
   public void tgrCurrentResponseBodyEvaluatesTheFhirPaths(final String fhirPaths) {
-    tgrCurrentResponseEvaluatesTheFhirPaths(RBEL_SELECTOR_FOR_BODY, fhirPaths, Optional.empty());
+    tgrCurrentResponseEvaluatesTheFhirPaths(RBEL_SELECTOR_FOR_BODY, fhirPaths, null);
   }
 
   public void tgrCurrentResponseEvaluatesTheFhirPaths(
       final String rbelPath, final String fhirPaths) {
-    tgrCurrentResponseEvaluatesTheFhirPaths(rbelPath, fhirPaths, Optional.empty());
+    tgrCurrentResponseEvaluatesTheFhirPaths(rbelPath, fhirPaths, null);
   }
 
   public void tgrCurrentResponseEvaluatesTheFhirPaths(
-      final String rbelPath, final String fhirPaths, final Optional<String> errorMessage) {
+      final String rbelPath, final String fhirPaths, final String errorMessage) {
     final Optional<String> fhirRessource = findElementInCurrentResponse(rbelPath);
     if (fhirRessource.isEmpty()) {
       return;
@@ -239,13 +240,13 @@ public class FhirPathValidation {
       final String fhirPath,
       final Base ressource,
       final SoftAssertions softly,
-      final Optional<String> errorMessage) {
+      final String errorMessage) {
     evaluate(
         fhirPath,
         EvaluateOptions.builder()
             .ressource(ressource)
             .softAsserter(softly)
-            .errorMessage(errorMessage.orElse(null))
+            .errorMessage(errorMessage)
             .expectedOutcome(false)
             .build());
   }
@@ -406,7 +407,8 @@ public class FhirPathValidation {
           msg = "result is not a primitive type for FHIRPath: " + fhirPath;
         }
       } else {
-        evidenceRecorder.recordEvidence(new Evidence(Type.ERROR, "result is null or empty for FHIRPath: " + fhirPath));
+        evidenceRecorder.recordEvidence(
+            new Evidence(Type.ERROR, "result is null or empty for FHIRPath: " + fhirPath));
         msg = "result is null or empty for FHIRPath: " + fhirPath;
       }
     } catch (final FHIRException e) {
