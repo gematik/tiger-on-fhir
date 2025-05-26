@@ -112,7 +112,7 @@ Funktionalität: FHIR Validation Deutsch
     evidence-type-ERROR"
     """
 
-  Szenario: FHIR-Validierung unter Verwendung eines Plugins mit Hilfe des Referenz Validators
+  Szenario: FHIR-Validierung mittels Referenz Validators
     Gegeben sei TGR liest folgende .tgr Datei 'src/test/resources/fhir-plugins.tgr'
     Wenn TGR finde die nächste Anfrage mit dem Pfad '/minimal/42'
     Dann FHIR prüfe die aktuelle Anfrage enthält im Body eine gültige minimal Ressource
