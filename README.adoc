@@ -1,8 +1,33 @@
+:doctype: book
+ifndef::env-github[]
+image::Gematik_Logo_Flag_With_Background.png[logo,width=200,height=47,role=right]
+endif::[]
+ifdef::env-github[]
+++++
+<img align="right" width="250" height="47" src="Gematik_Logo_Flag_With_Background.png"/> <br/>
+++++
+endif::[]
 = Tiger-On-FHIR
 
 image::doc/images/tiger2-plain.svg[title="TigerLogo"]
 
-== Tiger-On-FHIR extension
+++++
+<details>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li>
+      <a href="#about-the-project">About The Project</a>
+    </li>
+    <li><a href="#release-notes">Release Notes</a></li>
+    </li>
+    <li><a href="LICENSE">License</a></li>
+    <li><a href="#references">References</a></li>
+  </ol>
+</details>
+++++
+
+
+== About The Project
 
 Tiger-On-FHIR extension provides a set of simple BDD steps which can be used in combination with the Tiger RbelValidator steps to validate requests and responses.
 You can use the RbelValidator steps to filter request/responses and then check for valid FHIR content therein.
@@ -10,25 +35,27 @@ You can use the RbelValidator steps to filter request/responses and then check f
 It is an extension of the tiger frameworks.
 For further information regarding the tiger frameworks have a look at the link:https://gematik.github.io/app-Tiger/Tiger-User-Manual.pdf[User Manual].
 
-== What is Tiger
+=== What is Tiger
 
 Tiger is a BDD oriented test platform implemented by gematik GmbH.
 Take a look at our short pitch video explaining the basic idea of Tiger.
 
 image::doc/images/tiger-promo-screenie.png[link=https://youtu.be/eJJZDeuFlyI]
 
-== Version
+=== Version
 
 The following table shows the recommended combination of versions that should be used when using the tiger-on-fhir.
 
 [cols=2*]
 |===
 | tiger-on-fhir Version | Tiger Version
+| 1.2.12 | 3.7.9
 | 1.2.3 | 3.1.1
 | 1.2.2 | 3.0.1
 | 1.2.1 | 2.3.2
 |===
 
+=== Examples
 Here are some examples how to use the tiger-on-fhir extension in gherkin/feature files.
 
 [source,gherkin]
@@ -63,12 +90,41 @@ The folder structure for adding Referenzvalidator Plugins should look like this:
     └── refv-plugin2.zip
 ....
 
-== Using other libraries / source code
+=== Using other libraries / source code
 
 For the evidence reports we use the freemarker template engine.
 The FHIR validations are performed by the gematik FHIR Referenzvalidator engine, which itself is based upon the HAPI library.
 
 You can add as many plugins as you need. Said plugins can be found link:https://github.com/gematik/app-referencevalidator-plugins/releases[here]
+
+== Release Notes
+
+See `link:ReleaseNotes.md[ReleaseNotes]` for all information regarding the (newest) releases.
+
+== License
+
+Copyright 2025 gematik GmbH
+
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
+
+See the link:./LICENSE[LICENSE] for the specific language governing permissions and limitations under the License.
+
+== Additional Notes and Disclaimer from gematik GmbH
+
+. Copyright notice: Each published work result is accompanied by an explicit statement of the license conditions for use. These are regularly typical conditions in connection with open source or free software. Programs described/provided/linked here are free software, unless otherwise stated.
+. Permission notice: Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions::
+.. The copyright notice (Item 1) and the permission notice (Item 2) shall be included in all copies or substantial portions of the Software.
+.. The software is provided "as is" without warranty of any kind, either express or implied, including, but not limited to, the warranties of fitness for a particular purpose, merchantability, and/or non-infringement. The authors or copyright holders shall not be liable in any manner whatsoever for any damages or other claims arising from, out of or in connection with the software or the use or other dealings with the software, whether in an action of contract, tort, or otherwise.
+.. The software is the result of research and development activities, therefore not necessarily quality assured and without the character of a liable product. For this reason, gematik does not provide any support or other user assistance (unless otherwise stated in individual cases and without justification of a legal obligation). Furthermore, there is no claim to further development and adaptation of the results to a more current state of the art.
+. Gematik may remove published results temporarily or permanently from the place of publication at any time without prior notice or justification.
+. Please note: Parts of this code may have been generated using AI-supported technology.’ Please take this into account, especially when troubleshooting, for security analyses and possible adjustments.
+
+== Contact
+We take open source license compliance very seriously. We are always striving to achieve compliance at all times and to improve our processes.
+This software is currently being tested to ensure its technical quality and legal compliance. Your feedback is highly valued.
+If you find any issues or have any suggestions or comments, or if you see any other ways in which we can improve, please reach out to: [ADD CONTACT DETAILS, E.G. E-MAIL ADDRESS].
+
+
 
 == References
 

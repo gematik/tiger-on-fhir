@@ -1,5 +1,8 @@
 # Changelog tiger-on-fhir
 
+# Release 1.2.12
+* TGR-1862: upgrade to Tiger 3.7.9, added tiger-bom dependency, added license header plugin
+
 # Release 1.2.8
 * TGRFHIR-27: dependency update (ref validator to v2.7, tiger to v3.5.0)
 * TGRFHIR-29: dependency update (ref validator to v2.8, tiger to v3.7.0)
