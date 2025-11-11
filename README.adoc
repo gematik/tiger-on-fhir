@@ -49,6 +49,7 @@ The following table shows the recommended combination of versions that should be
 [cols=2*]
 |===
 | tiger-on-fhir Version | Tiger Version
+| 1.2.13 | 4.1.1
 | 1.2.12 | 3.7.9
 | 1.2.3 | 3.1.1
 | 1.2.2 | 3.0.1
@@ -120,9 +121,10 @@ See the link:./LICENSE[LICENSE] for the specific language governing permissions 
 . Please note: Parts of this code may have been generated using AI-supported technology.’ Please take this into account, especially when troubleshooting, for security analyses and possible adjustments.
 
 == Contact
-We take open source license compliance very seriously. We are always striving to achieve compliance at all times and to improve our processes.
-This software is currently being tested to ensure its technical quality and legal compliance. Your feedback is highly valued.
-If you find any issues or have any suggestions or comments, or if you see any other ways in which we can improve, please reach out to: [ADD CONTACT DETAILS, E.G. E-MAIL ADDRESS].
+This software is currently being tested to ensure its technical quality and legal compliance. Your feedback is highly
+valued.
+If you find any issues or have any suggestions or comments, or if you see any other ways in which we can improve, please
+reach out to: tiger@gematik.de
 
 
 

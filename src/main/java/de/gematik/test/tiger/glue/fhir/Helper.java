@@ -21,15 +21,16 @@
 
 package de.gematik.test.tiger.glue.fhir;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import io.cucumber.java.en.Then;
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Comparator;
-import lombok.SneakyThrows;
-import lombok.extern.slf4j.Slf4j;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
 public class Helper {
@@ -52,13 +53,16 @@ public class Helper {
       final var lines = expectedLines.lines().map(it -> (CharSequence) it).toList();
 
       if (report.isEmpty()) {
-        log.error("No report matching filename regex found in folder {}", Paths.get(reportDir).toFile().getAbsolutePath());
-        throw new AssertionError("No report matching filename regex found in folder " + Paths.get(reportDir).toFile().getAbsolutePath());
+        log.error(
+            "No report matching filename regex found in folder {}",
+            Paths.get(reportDir).toFile().getAbsolutePath());
+        throw new AssertionError(
+            "No report matching filename regex found in folder "
+                + Paths.get(reportDir).toFile().getAbsolutePath());
       } else {
         log.info("Checking report file {} for content", report.get().toFile().getAbsolutePath());
       }
-      assertThat(Helper.toFileContent(report.get()))
-              .contains(lines);
+      assertThat(Helper.toFileContent(report.get())).contains(lines);
     }
   }
 
