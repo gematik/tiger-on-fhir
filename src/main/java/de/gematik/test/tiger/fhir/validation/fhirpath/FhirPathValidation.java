@@ -58,7 +58,7 @@ public class FhirPathValidation {
   private static final FHIRPathEngine fhirPathEngine =
       new FHIRPathEngine(new HapiWorkerContext(ctx, new DefaultProfileValidationSupport(ctx)));
 
-  public static final String RBEL_SELECTOR_FOR_CONTENT_TYPE_HEADER = "$.header.Content-Type";
+  public static final String RBEL_SELECTOR_FOR_CONTENT_TYPE_HEADER = "$.header.[~'Content-Type']";
   public static final String RBEL_SELECTOR_FOR_BODY = "$.body";
 
   private final EvidenceRecorder evidenceRecorder;
