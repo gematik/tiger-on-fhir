@@ -49,6 +49,7 @@ The following table shows the recommended combination of versions that should be
 [cols=2*]
 |===
 | tiger-on-fhir Version | Tiger Version
+| 1.2.14 | 4.1.13
 | 1.2.13 | 4.1.1
 | 1.2.12 | 3.7.9
 | 1.2.3 | 3.1.1

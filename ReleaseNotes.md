@@ -1,5 +1,8 @@
 # Changelog tiger-on-fhir
 
+# Release 1.2.14 (unreleased)
+* TGRFHIR-37: Fixed case-sensitive HTTP header matching in FHIR validation. The Content-Type header is now matched case-insensitively to support different capitalizations (e.g., "content-type", "Content-Type", "CONTENT-TYPE") as per HTTP/1.1 specification (RFC 2616).
+
 # Release 1.2.13
 * TGRFHIR-36: update to tiger 4.1.1, update to ref validator 2.12
 
