@@ -93,20 +93,37 @@ public class FhirPathValidation {
 
   public void tgrCurrentRequestEvaluatesTheFhirPaths(
       final String rbelPath, final String fhirPaths, final String errorMessage) {
-    final Optional<String> fhirRessource = findElementInCurrentRequest(rbelPath);
+    final Optional<String> fhirResource = findElementInCurrentRequest(rbelPath);
 
-    if (fhirRessource.isEmpty()) {
-      return;
-    }
+      fhirResource.ifPresent(resource -> {
+        final IBaseResource iBaseResource = parseRequestByContentType(resource);
 
-    final IBaseResource ressource = parseRequestByContentType(fhirRessource.get());
+        assertSoftly(
+                softAsserter ->
+                        toCleanFhirPath(fhirPaths)
+                                .map(TigerGlobalConfiguration::resolvePlaceholders)
+                                .forEach(
+                                        fhirPath -> evaluate(fhirPath, (Base) iBaseResource, softAsserter, errorMessage)));
 
-    assertSoftly(
-        softAsserter ->
-            toCleanFhirPath(fhirPaths)
-                .map(TigerGlobalConfiguration::resolvePlaceholders)
-                .forEach(
-                    fhirPath -> evaluate(fhirPath, (Base) ressource, softAsserter, errorMessage)));
+    });
+
+  }
+
+  public void tgrCurrentRequestWithContentTypeAtEvaluatesTheFhirPaths(
+          final String rbelPath, final String contentTypePath, final String fhirPaths, final String errorMessage) {
+    final Optional<String> fhirResource = findElementInCurrentRequest(rbelPath);
+
+    fhirResource.ifPresent( resource -> {
+        final IBaseResource iBaseResource = parseRequestByContentTypeAt(resource, contentTypePath);
+
+        assertSoftly(
+                softAsserter ->
+                        toCleanFhirPath(fhirPaths)
+                                .map(TigerGlobalConfiguration::resolvePlaceholders)
+                                .forEach(
+                                        fhirPath -> evaluate(fhirPath, (Base) iBaseResource, softAsserter, errorMessage)));
+    });
+
   }
 
   @NotNull
@@ -143,19 +160,19 @@ public class FhirPathValidation {
 
   public void tgrCurrentResponseEvaluatesTheFhirPaths(
       final String rbelPath, final String fhirPaths, final String errorMessage) {
-    final Optional<String> fhirRessource = findElementInCurrentResponse(rbelPath);
-    if (fhirRessource.isEmpty()) {
-      return;
-    }
+    final Optional<String> fhirResource = findElementInCurrentResponse(rbelPath);
+    fhirResource.ifPresent(resource -> {
+        final IBaseResource iBaseResource = parseResponseByContentType(resource);
+        assertSoftly(
+                softAsserter ->
+                        toCleanFhirPath(fhirPaths)
+                                .map(TigerGlobalConfiguration::resolvePlaceholders)
+                                .forEach(
+                                        fhirPath -> evaluate(fhirPath, (Base) iBaseResource, softAsserter, errorMessage)));
 
-    final IBaseResource ressource = parseResponseByContentType(fhirRessource.get());
+    });
 
-    assertSoftly(
-        softAsserter ->
-            toCleanFhirPath(fhirPaths)
-                .map(TigerGlobalConfiguration::resolvePlaceholders)
-                .forEach(
-                    fhirPath -> evaluate(fhirPath, (Base) ressource, softAsserter, errorMessage)));
+
   }
 
   public void tgrCurrentRequestBodyFailesTheFhirPath(final String fhirPath) {
@@ -163,14 +180,11 @@ public class FhirPathValidation {
   }
 
   public void tgrCurrentRequestFailsTheFhirPath(final String rbelPath, final String fhirPath) {
-    final Optional<String> fhirRessource = findElementInCurrentRequest(rbelPath);
-    if (fhirRessource.isEmpty()) {
-      return;
-    }
-
-    final IBaseResource ressource = parseRequestByContentType(fhirRessource.get());
-
-    assertSoftly(soft -> evaluateFail(resolvePlaceholders(fhirPath), (Base) ressource, soft));
+    final Optional<String> fhirResource = findElementInCurrentRequest(rbelPath);
+    fhirResource.ifPresent(resource -> {
+        final IBaseResource iBaseResource = parseRequestByContentType(resource);
+        assertSoftly(soft -> evaluateFail(resolvePlaceholders(fhirPath), (Base) iBaseResource, soft));
+    });
   }
 
   public void tgrCurrentResponseBodyFailsTheFhirPath(final String fhirPath) {
@@ -179,13 +193,12 @@ public class FhirPathValidation {
 
   public void tgrCurrentResponseFailsTheFhirPath(final String rbelPath, final String fhirPath) {
     final Optional<String> fhirResource = findElementInCurrentResponse(rbelPath);
-    if (fhirResource.isEmpty()) {
-      return;
-    }
+    fhirResource.ifPresent(resource -> {
+        final IBaseResource ressource = parseResponseByContentType(resource);
+        assertSoftly(soft -> evaluateFail(resolvePlaceholders(fhirPath), (Base) ressource, soft));
 
-    final IBaseResource ressource = parseResponseByContentType(fhirResource.get());
+    });
 
-    assertSoftly(soft -> evaluateFail(resolvePlaceholders(fhirPath), (Base) ressource, soft));
   }
 
   private void evaluate(final String fhirPath, EvaluateOptions options) {
@@ -214,7 +227,7 @@ public class FhirPathValidation {
         options.expectedOutcome
             ? numberOfTrueValues(evaluationResult)
             : numberOfFalseValues(evaluationResult);
-    final String targetValueString = options.expectedOutcome ? "true" : "false";
+      final String targetValueString = Boolean.toString(options.expectedOutcome);
 
     if (numberOfTargetValues > 0) {
       evidenceRecorder.recordEvidence(
@@ -310,13 +323,34 @@ public class FhirPathValidation {
     return getParserByRequestContentType().parseResource(fhirResource);
   }
 
+  @SuppressWarnings("java:S2259")
+  private IBaseResource parseRequestByContentTypeAt(final String fhirResource, final String contentTypePath) {
+    final Optional<String> contentType = netTracer.getCurrentRequestsRawStringByRbelPath(contentTypePath);
+
+    if (contentType.isEmpty()) {
+      evidenceRecorder.recordEvidence(new Evidence(Type.ERROR, "no Content-Type found at path: " + contentTypePath));
+      fail("no Content-Type found at path: " + contentTypePath);
+      return null;
+    }
+
+    final Optional<IParser> parser = getParserForContentTypeHeader(contentType.get());
+
+    if (parser.isEmpty()) {
+      evidenceRecorder.recordEvidence(new Evidence(Type.ERROR, "no parser for Content-Type: " + contentType.get()));
+      fail("no parser for Content-Type: " + contentType.get());
+      return null;
+    }
+
+    return parser.get().parseResource(fhirResource);
+  }
+
   private Optional<String> findElementInCurrentRequest(final String rbelPath) {
     final Optional<String> element = netTracer.getCurrentRequestsRawStringByRbelPath(rbelPath);
 
     if (element.isEmpty()) {
       evidenceRecorder.recordEvidence(
-          new Evidence(Type.FATAL, "no element found with rbel at request"));
-      fail("no element found with rbel at request");
+              new Evidence(Type.FATAL, "No element found in request at rbel path: '" + rbelPath + "'"));
+      fail("No element found in request at rbel path: '%s'", rbelPath);
     }
     return element;
   }
@@ -331,8 +365,8 @@ public class FhirPathValidation {
 
     if (element.isEmpty()) {
       evidenceRecorder.recordEvidence(
-          new Evidence(Type.FATAL, "no element found with rbel at response"));
-      fail("no element found with rbel at response");
+              new Evidence(Type.FATAL, "No element found in response at rbel path: '" + rbelPath + "'"));
+      fail("No element found in response at rbel path: '%s'", rbelPath);
     }
 
     return element;

@@ -94,6 +94,18 @@ public class FhirPathValidationGlue {
     fhirPathValidation.tgrCurrentRequestEvaluatesTheFhirPath(rbelPath, fhirPath, errorMessage);
   }
 
+    @Then(
+            "FHIR current request at {tigerResolvedString} with content type at {tigerResolvedString}"
+                    + " evaluates the FHIRPath {tigerResolvedString} with error message {tigerResolvedString}")
+    @Dann(
+            "FHIR die aktuelle Anfrage im Knoten {tigerResolvedString} mit Content-Type im Knoten {tigerResolvedString}"
+                    + " den FHIRPath {tigerResolvedString} mit der Fehlermeldung {tigerResolvedString} erfüllt")
+  public void tgrCurrentRequestWithContentTypeAtEvaluatesTheFhirPath(
+          final String rbelPath, final String contentTypePath, final String fhirPath, final String errorMessage) {
+    fhirPathValidation.tgrCurrentRequestWithContentTypeAtEvaluatesTheFhirPaths(
+            rbelPath, contentTypePath, fhirPath, errorMessage);
+  }
+
   @Then("FHIR current request body evaluates the FHIRPaths:")
   @Dann("FHIR prüfe die aktuelle Anfrage erfüllt im Body die FHIRPath Ausdrücke:")
   @Wenn("FHIR die aktuelle Anfrage im Body die FHIRPath Ausdrücke erfüllt:")
