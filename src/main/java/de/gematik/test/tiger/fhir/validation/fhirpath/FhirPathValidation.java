@@ -21,10 +21,6 @@
 
 package de.gematik.test.tiger.fhir.validation.fhirpath;
 
-import static de.gematik.test.tiger.common.config.TigerGlobalConfiguration.resolvePlaceholders;
-import static org.assertj.core.api.Assertions.fail;
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
-
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.support.DefaultProfileValidationSupport;
 import ca.uhn.fhir.parser.IParser;
@@ -32,9 +28,6 @@ import de.gematik.test.tiger.common.config.TigerGlobalConfiguration;
 import io.cucumber.core.plugin.report.Evidence;
 import io.cucumber.core.plugin.report.Evidence.Type;
 import io.cucumber.core.plugin.report.EvidenceRecorder;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Stream;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.assertj.core.api.SoftAssertions;
@@ -44,6 +37,14 @@ import org.hl7.fhir.r4.hapi.ctx.HapiWorkerContext;
 import org.hl7.fhir.r4.model.Base;
 import org.hl7.fhir.r4.utils.FHIRPathEngine;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
+
+import static de.gematik.test.tiger.common.config.TigerGlobalConfiguration.resolvePlaceholders;
+import static org.assertj.core.api.Assertions.fail;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 /**
  * FHIRPath validation.
@@ -173,6 +174,25 @@ public class FhirPathValidation {
     });
 
 
+  }
+
+  public void tgrCurrentResponseWithContentTypeAtEvaluatesTheFhirPaths(
+      final String rbelPath, final String contentTypePath, final String fhirPaths, final String errorMessage) {
+    final Optional<String> fhirResource = findElementInCurrentResponse(rbelPath);
+
+    fhirResource.ifPresent(
+        resource -> {
+          final IBaseResource iBaseResource =
+              parseResponseByContentTypeAt(resource, contentTypePath);
+
+          assertSoftly(
+              softAsserter ->
+                  toCleanFhirPath(fhirPaths)
+                      .map(TigerGlobalConfiguration::resolvePlaceholders)
+                      .forEach(
+                          fhirPath ->
+                              evaluate(fhirPath, (Base) iBaseResource, softAsserter, errorMessage)));
+        });
   }
 
   public void tgrCurrentRequestBodyFailesTheFhirPath(final String fhirPath) {
@@ -323,27 +343,6 @@ public class FhirPathValidation {
     return getParserByRequestContentType().parseResource(fhirResource);
   }
 
-  @SuppressWarnings("java:S2259")
-  private IBaseResource parseRequestByContentTypeAt(final String fhirResource, final String contentTypePath) {
-    final Optional<String> contentType = netTracer.getCurrentRequestsRawStringByRbelPath(contentTypePath);
-
-    if (contentType.isEmpty()) {
-      evidenceRecorder.recordEvidence(new Evidence(Type.ERROR, "no Content-Type found at path: " + contentTypePath));
-      fail("no Content-Type found at path: " + contentTypePath);
-      return null;
-    }
-
-    final Optional<IParser> parser = getParserForContentTypeHeader(contentType.get());
-
-    if (parser.isEmpty()) {
-      evidenceRecorder.recordEvidence(new Evidence(Type.ERROR, "no parser for Content-Type: " + contentType.get()));
-      fail("no parser for Content-Type: " + contentType.get());
-      return null;
-    }
-
-    return parser.get().parseResource(fhirResource);
-  }
-
   private Optional<String> findElementInCurrentRequest(final String rbelPath) {
     final Optional<String> element = netTracer.getCurrentRequestsRawStringByRbelPath(rbelPath);
 
@@ -359,6 +358,36 @@ public class FhirPathValidation {
   private IBaseResource parseResponseByContentType(final String fhirResource) {
     return getParserByResponseContentType().parseResource(fhirResource);
   }
+
+  @SuppressWarnings("java:S2259")
+  private IBaseResource parseByContentTypeAt(final String fhirResource, final String contentTypePath,
+                                             final Optional<String> contentType) {
+      if (contentType.isEmpty()) {
+          evidenceRecorder.recordEvidence(new Evidence(Type.ERROR, "no Content-Type found at path: " + contentTypePath));
+          fail("no Content-Type found at path: " + contentTypePath);
+          return null;
+      }
+
+      final Optional<IParser> parser = getParserForContentTypeHeader(contentType.get());
+
+      if (parser.isEmpty()) {
+          evidenceRecorder.recordEvidence(new Evidence(Type.ERROR, "no parser for Content-Type: " + contentType.get()));
+          fail("no parser for Content-Type: " + contentType.get());
+          return null;
+      }
+
+      return parser.get().parseResource(fhirResource);
+  }
+
+    private IBaseResource parseRequestByContentTypeAt(final String fhirResource, final String contentTypePath) {
+        return parseByContentTypeAt(fhirResource, contentTypePath,
+                netTracer.getCurrentRequestsRawStringByRbelPath(contentTypePath));
+    }
+
+    private IBaseResource parseResponseByContentTypeAt(final String fhirResource, final String contentTypePath) {
+        return parseByContentTypeAt(fhirResource, contentTypePath,
+                netTracer.getCurrentResponseRawStringByRbelPath(contentTypePath));
+    }
 
   private Optional<String> findElementInCurrentResponse(final String rbelPath) {
     var element = netTracer.getCurrentResponseRawStringByRbelPath(rbelPath);
