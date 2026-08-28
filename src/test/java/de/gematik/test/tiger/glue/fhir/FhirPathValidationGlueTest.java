@@ -608,6 +608,71 @@ class FhirPathValidationGlueTest {
   }
 
   @ParameterizedTest
+  @MethodSource("provideXMLWithEauAndIsikFhirResource")
+  @DisplayName(
+      "xml Response with custom content type path should evaluate valid fhir path expressions")
+  @SneakyThrows
+  void
+      fhirPathValidationXmlResponse_WithCustomContentTypePathShouldEvaluateValidFhirPathExpressions(
+          String fhirResource) {
+    // given
+    String customContentTypePath = "$.custom.headers.content-type";
+    when(netTracer.getCurrentResponseRawStringByRbelPath(FhirPathValidation.RBEL_SELECTOR_FOR_BODY))
+        .thenReturn(Optional.of(fhirResource));
+    when(netTracer.getCurrentResponseRawStringByRbelPath(customContentTypePath))
+        .thenReturn(Optional.of("application/xml"));
+    final String fhirPath = getTruthyResultFhirPath();
+
+    // when
+    underTest.tgrCurrentResponseWithContentTypeAtEvaluatesTheFhirPath(
+        FhirPathValidation.RBEL_SELECTOR_FOR_BODY, customContentTypePath, fhirPath, "");
+
+    // then
+    verify(evidenceRecorder).recordEvidence(evidenceCaptor.capture());
+
+    final Evidence value = evidenceCaptor.getValue();
+    assertThat(value)
+        .hasType(Type.INFO)
+        .hasTitle(fhirPath)
+        .extracting(Evidence::getDetails)
+        .asInstanceOf(LIST)
+        .hasOnlyElementsOfTypes(BooleanType.class)
+        .hasSize(1)
+        .satisfies(
+            details ->
+                org.assertj.core.api.Assertions.assertThat(details)
+                    .satisfiesExactly(it -> assertTrue(((BooleanType) it).booleanValue())));
+  }
+
+  @ParameterizedTest
+  @MethodSource("provideXMLWithEauAndIsikFhirResource")
+  @DisplayName(
+      "xml Response with custom content type path should show error message on falsy fhir path")
+  @SneakyThrows
+  void
+      fhirPathValidationXmlResponse_WithCustomContentTypePathShouldShowErrorMessageOnFalsyFhirPath(
+          String fhirResource) {
+    // given
+    String customContentTypePath = "$.custom.headers.content-type";
+    when(netTracer.getCurrentResponseRawStringByRbelPath(FhirPathValidation.RBEL_SELECTOR_FOR_BODY))
+        .thenReturn(Optional.of(fhirResource));
+    when(netTracer.getCurrentResponseRawStringByRbelPath(customContentTypePath))
+        .thenReturn(Optional.of("application/xml"));
+    final String fhirPath = getFalsyResultFhirPath();
+
+    // when & then
+    assertThatThrownBy(
+            () ->
+                underTest.tgrCurrentResponseWithContentTypeAtEvaluatesTheFhirPath(
+                    FhirPathValidation.RBEL_SELECTOR_FOR_BODY,
+                    customContentTypePath,
+                    fhirPath,
+                    "Custom error: This FHIRPath expression failed"))
+        .isInstanceOf(AssertionError.class)
+        .hasMessageContaining("Custom error: This FHIRPath expression failed");
+  }
+
+  @ParameterizedTest
   @MethodSource("provideXMLFhirResource")
   @DisplayName(
       "at XML Response should log appropriate evidences on falsy boolean result of a fhir path"
